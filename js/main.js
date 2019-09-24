@@ -9,7 +9,7 @@ var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-]; //адреса фотографий
+]; // адреса фотографий
 var x;
 var y;
 
@@ -21,7 +21,7 @@ function getRandomInt(min, max) {
 }
 
 // функция генерации массива из объектов-объявлений
-function createAds(adsNumber) {
+function createAds() {
 
   for (var i = 0; i < adsNumber; i++) {
     adverts[i] = {
@@ -48,14 +48,14 @@ function createAds(adsNumber) {
         'photos': photos.slice(Math.floor(Math.random() * photos.length)) // массив строк случайной длины, содержащий адреса фотографий
       },
     };
-  };
+  }
   return adverts;
-};
+}
 
-createAds(adsNumber);
+createAds();
 
-var map = document.querySelector(".map");
-map.classList.remove("map--faded");
+var map = document.querySelector('.map');
+map.classList.remove('map--faded');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
