@@ -98,7 +98,7 @@ var createPopup = function (popup) {
   popupElement.querySelector('.popup__title').textContent = popup.offer.title;
   popupElement.querySelector('.popup__text--address').textContent = popup.offer.address;
   popupElement.querySelector('.popup__text--price').textContent = popup.offer.price + ' ₽/ночь';
-// В блок .popup__type выведите тип жилья offer.type: Квартира для flat, Бунгало для bungalo, Дом для house, Дворец для palace.
+  popupElement.querySelector('.popup__type').textContent = popup.offer.type; // В блок .popup__type выведите тип жилья offer.type: Квартира для flat, Бунгало для bungalo, Дом для house, Дворец для palace.
   popupElement.querySelector('.popup__text--capacity').textContent = popup.offer.rooms + ' комнаты для ' + popup.offer.guests + ' гостей.';
   popupElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + popup.offer.checkin + ', выезд до ' + popup.offer.checkout;
   popupElement.querySelector('.popup__features').textContent = popup.offer.features; // что-то надо делать с фьючерсами, чтобы отображались картинки, а не названия
