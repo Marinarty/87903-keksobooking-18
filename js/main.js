@@ -104,6 +104,16 @@ var getRoomsType = function (type) {
   return 'Дворец';
 };
 
+var createFeatures = function (fts) {
+
+  for (var j = 0; j < fts.length; j++) {
+    var featureElement = document.createElement('li');
+    featureElement.className = 'popup__feature ' + 'popup__feature--' + features[j];
+    fragment.appendChild(featureElement);
+  }
+  return fragment;
+};
+
 var createPhotos = function (photo) {
 
   for (var j = 0; j < photo.length; j++) {
@@ -126,7 +136,7 @@ var createPopup = function (popup) {
   popupElement.querySelector('.popup__type').textContent = getRoomsType(popup.offer.type);
   popupElement.querySelector('.popup__text--capacity').textContent = popup.offer.rooms + ' комнаты для ' + popup.offer.guests + ' гостей.';
   popupElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + popup.offer.checkin + ', выезд до ' + popup.offer.checkout;
-  popupElement.querySelector('.popup__features').textContent = popup.offer.features; // с фичерсами планирую сделать что-то типа фото ,если прием с фото нормальный
+  popupElement.querySelector('.popup__features').appendChild(createFeatures(popup.offer.features));
   popupElement.querySelector('.popup__description').textContent = popup.offer.description;
   popupElement.querySelector('.popup__photos').appendChild(createPhotos(popup.offer.photos));
   popupElement.querySelector('.popup__avatar').src = popup.author.avatar;
