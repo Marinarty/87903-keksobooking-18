@@ -104,17 +104,17 @@ var getRoomsType = function (type) {
   return 'Дворец';
 };
 
-var createPhotos = function (photos) {
+var createPhotos = function (photo) {
 
-  for (var i = 0; i < photos.length; i++) {
+  for (var j = 0; j < photo.length; j++) {
     var photoElement = document.createElement('img');
     photoElement.className = 'popup__photo';
-    photoElement.src = photos[i];
+    photoElement.src = photos[j];
     photoElement.width = 45;
     photoElement.height = 40;
-    photoElement.alt = 'фото жилья ' + (i + 1);
+    photoElement.alt = 'фото жилья ' + (j + 1);
     fragment.appendChild(photoElement);
-  };
+  }
   return fragment;
 };
 
