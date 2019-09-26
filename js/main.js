@@ -104,6 +104,20 @@ var getRoomsType = function (type) {
   return 'Дворец';
 };
 
+var createPhotos = function (photos) {
+
+  for (var i = 0; i < photos.length; i++) {
+    var photoElement = document.createElement('img');
+    photoElement.className = 'popup__photo';
+    photoElement.src = photos[i];
+    photoElement.width = 45;
+    photoElement.height = 40;
+    photoElement.alt = 'фото жилья ' + (i + 1);
+    fragment.appendChild(photoElement);
+  };
+  return fragment;
+};
+
 var createPopup = function (popup) {
   var popupElement = cardTemplate.cloneNode(true);
   popupElement.querySelector('.popup__title').textContent = popup.offer.title;
@@ -112,9 +126,9 @@ var createPopup = function (popup) {
   popupElement.querySelector('.popup__type').textContent = getRoomsType(popup.offer.type);
   popupElement.querySelector('.popup__text--capacity').textContent = popup.offer.rooms + ' комнаты для ' + popup.offer.guests + ' гостей.';
   popupElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + popup.offer.checkin + ', выезд до ' + popup.offer.checkout;
-  popupElement.querySelector('.popup__features').textContent = popup.offer.features; // что-то надо делать с фьючерсами, чтобы отображались картинки, а не названия
+  popupElement.querySelector('.popup__features').textContent = popup.offer.features; // с фичерсами планирую сделать что-то типа фото ,если прием с фото нормальный
   popupElement.querySelector('.popup__description').textContent = popup.offer.description;
-  popupElement.querySelector('.popup__photos').textContent = popup.offer.photos; // что-то надо делать
+  popupElement.querySelector('.popup__photos').appendChild(createPhotos(popup.offer.photos));
   popupElement.querySelector('.popup__avatar').src = popup.author.avatar;
   return popupElement;
 };
