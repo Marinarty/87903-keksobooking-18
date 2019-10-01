@@ -4,7 +4,6 @@ var adverts = [];
 var adsNumber = 8; // количество объявлений для генерации
 var types = ['palace', 'flat', 'house', 'bungalo']; // тип жилья
 var checks = ['12:00', '13:00', '14:00']; // часы заезда и выезда
-// !!здесь я отъезды и выезды объединила, так как это одинаковые часы. Возможно, в будущем окажется  что делать этого не стоило? Ну, например, логично, что заезд не может быть раньше выезда.
 var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']; // удобства
 var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
@@ -25,7 +24,6 @@ function createAds(adsLimit) {
   for (var i = 0; i < adsLimit; i++) {
     var x = getRandomInt(100, 900); // координаты метки на карте
     var y = getRandomInt(200, 600);
-    // !!здесь наставник предложил "не заморачиваться" и взять вот такой диапазон, потмоу что "все равно данные будут с сервиса приходить", поэтмоу точное положение конца метки я не искала:(
 
     adverts[i] = {
       'author': {
@@ -90,30 +88,23 @@ var getRoomsType = function (type) {
   }
   return 'Дворец';
 };
-// !! наставник предложил использовать вместо ифа свитч, но я не знаю, почему он эффективнее, чем иф.
 
 var createFeatures = function (fts) {
+  var featureElement = '';
 
   for (var j = 0; j < fts.length; j++) {
-    var featureElement = document.createElement('li');
-    featureElement.className = 'popup__feature ' + 'popup__feature--' + features[j];
-    fragment.appendChild(featureElement);
+    featureElement += '<li class="popup__feature popup__feature--' + features[j] + '"></li>';
   }
-  return fragment;
+  return featureElement;
 };
 
 var createPhotos = function (photo) {
+  var photoElement = '';
 
   for (var j = 0; j < photo.length; j++) {
-    var photoElement = document.createElement('img');
-    photoElement.className = 'popup__photo';
-    photoElement.src = photos[j];
-    photoElement.width = 45;
-    photoElement.height = 40;
-    photoElement.alt = 'фото жилья ' + (j + 1);
-    fragment.appendChild(photoElement);
+    photoElement += '<img src="' + photos[j] + '"' + 'class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>';
   }
-  return fragment;
+  return photoElement;
 };
 
 var createPopup = function (popup) {
@@ -124,26 +115,11 @@ var createPopup = function (popup) {
   popupElement.querySelector('.popup__type').textContent = getRoomsType(popup.offer.type);
   popupElement.querySelector('.popup__text--capacity').textContent = popup.offer.rooms + ' комнаты для ' + popup.offer.guests + ' гостей.';
   popupElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + popup.offer.checkin + ', выезд до ' + popup.offer.checkout;
-  popupElement.querySelector('.popup__features').appendChild(createFeatures(popup.offer.features));
+  popupElement.querySelector('.popup__features').innerHTML = createFeatures(popup.offer.features);
   popupElement.querySelector('.popup__description').textContent = popup.offer.description;
-  popupElement.querySelector('.popup__photos').appendChild(createPhotos(popup.offer.photos));
+  popupElement.querySelector('.popup__photos').innerHTML = createPhotos(popup.offer.photos);
   popupElement.querySelector('.popup__avatar').src = popup.author.avatar;
   return popupElement;
 };
 
 document.querySelector('.map').insertBefore(createPopup(adverts[0]), document.querySelector('.map__filters-container'));
-
-// !! как видишь, я элементы то создала и все прекрасно-радужно, н оте что в разметки - они остались. И вот я думаю, их надо удалять через remove и писать, какой по счету элемент удалить,
-// !! или изменить весь механизм и сделать все через innerHTML, чтобы заменять всю разметку сразу?
-
-// !! у меня огромнео непонимание про передачу параметров в функцию. Зачем это нужно делать всегда?
-// !! Например, вот эта функция function createAds() - работает и без передачи параметра.
-// !! Я могу писать for (var i = 0; i < adsNumber; i++) и все работает. А если я передам параметр  createAds(adsNumber), то ругается линтер, потому что переменная уже задана выше.
-// !! У него на это есть право, наверно, но почему, я не понимаю.
-
-// !! В связи с непониманием передачи параметров, мне, например, не понятно, почему вот здесь:
-// !! popupElement.querySelector('.popup__text--price').textContent = popup.offer.price + ' ₽/ночь';
-// !! мы пишем popup.offer.price, а не adverts.offer.price, мы же эти данные из этого объекта берем ?
-
-// !! По-моему, у меня и задание функций записано разными способами, а это критерию противоречит, да и переменные некоторые капсом должны быть, наврено.
-// !! Как видишь, полная каша в голове:) А код я пишу большей частью методом тыка, гугла и обрывочных знаний.
