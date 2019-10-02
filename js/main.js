@@ -64,7 +64,7 @@ var map = document.querySelector('.map');
 
 // делаем элементы управления формы неактивными
 var formElements = document.querySelectorAll('.map__filter');
-formElements.setAttribute("disabled");
+formElements.setAttribute('disabled');
 // !!ошибка formElements.setAttribute is not a function
 
 // добавляем обработчик события mousedown на элемент .map__pin--main, переводящий страницу из неактивного состояния в активное
@@ -102,9 +102,6 @@ mainPin.addEventListener('keydown', function (evt) {
 });
 
 // !!про соотношение комнат-гостей, пока нет идей как это сделать, нужна наводка)
-
-
-
 
 // var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 // var mapPins = document.querySelector('.map__pins');
