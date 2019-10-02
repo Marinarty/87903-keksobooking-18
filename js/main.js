@@ -90,11 +90,11 @@ var toActive = function () {
   fillAddressForActiveMap(mainPin);
 };
 
-mainPin.addEventListener('click', function() {
+mainPin.addEventListener('click', function () {
   toActive();
 });
 
-mainPin.addEventListener('keydown', function(evt) {
+mainPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     toActive();
   }
