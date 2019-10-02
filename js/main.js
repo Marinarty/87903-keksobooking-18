@@ -10,6 +10,10 @@ var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ]; // адреса фотографий
+var ENTER_KEYCODE = 13;
+var MAIN_PIN_WIDTH = 62;
+var MAIN_PIN_HEIGHT = 62;
+var MAIN_PIN_POINT_HEIGHT = 22;
 
 // функция рандома
 function getRandomInt(min, max) {
@@ -55,71 +59,113 @@ function createAds(adsLimit) {
 
 createAds(adsNumber);
 
+
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var mapPins = document.querySelector('.map__pins');
-var fragment = document.createDocumentFragment();
 
-var createPins = function (ads) {
-  var adsElement = pinTemplate.cloneNode(true);
-  adsElement.style.left = ads.location.x + 'px';
-  adsElement.style.top = ads.location.y + 'px';
-  adsElement.querySelector('img').src = ads.author.avatar;
-  adsElement.querySelector('img').alt = ads.offer.title;
-  return adsElement;
+// делаем элементы управления формы неактивными
+// var formElements = document.querySelectorAll('.map__filter');
+// formElements.setAttribute("disabled");
+
+// добавляем обработчик события mousedown на элемент .map__pin--main, переводящий страницу из неактивного состояния в активное
+var mainPin = document.querySelector('.map__pin--main');
+var mainForm = document.querySelector('.ad-form');
+var addressInput = document.getElementById('address');
+
+// добавляем в инпут адреса изначальные координаты центра метки при неактивном состоянии страницы
+var fillAddressForInactiveMap = function (element) {
+  addressInput.value = Math.round(element.style.left + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(element.style.top + MAIN_PIN_HEIGHT / 2));
 };
 
-for (var i = 0; i < adverts.length; i++) {
-  fragment.appendChild(createPins(adverts[i]));
-}
+fillAddressForInactiveMap(mainPin);
+// !!и это не работает - возвращает (Nan, Nan), потому что element.style.left - это, видимо, не число получается. А надо, его преобразовать в число...
 
-mapPins.appendChild(fragment);
+// добавляем в инпут адреса координаты острого конца метки при активном состоянии страницы
+var fillAddressForActiveMap = function (element) {
+  addressInput.value = Math.round(element.style.left + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(element.style.top + MAIN_PIN_HEIGHT + MAIN_PIN_POINT_HEIGHT));
+};
 
-var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var toActive = function () {
+  map.classList.remove('map--faded');
+  mainForm.classList.remove('ad-form--disabled');
+  fillAddressForActiveMap(mainPin);
+};
 
-var getRoomsType = function (type) {
-  if (type === 'flat') {
-    return 'Квартира';
-  } else if (type === 'bungalo') {
-    return 'Бунгало';
-  } else if (type === 'house') {
-    return 'Дом';
+mainPin.addEventListener('click', function() {
+  toActive();
+});
+
+mainPin.addEventListener('keydown', function(evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    toActive();
   }
-  return 'Дворец';
-};
+});
 
-var createFeatures = function (fts) {
-  var featureElement = '';
 
-  for (var j = 0; j < fts.length; j++) {
-    featureElement += '<li class="popup__feature popup__feature--' + features[j] + '"></li>';
-  }
-  return featureElement;
-};
+// var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+// var mapPins = document.querySelector('.map__pins');
+// var fragment = document.createDocumentFragment();
 
-var createPhotos = function (photo) {
-  var photoElement = '';
+// var createPins = function (ads) {
+//   var adsElement = pinTemplate.cloneNode(true);
+//   adsElement.style.left = ads.location.x + 'px';
+//   adsElement.style.top = ads.location.y + 'px';
+//   adsElement.querySelector('img').src = ads.author.avatar;
+//   adsElement.querySelector('img').alt = ads.offer.title;
+//   return adsElement;
+// };
 
-  for (var j = 0; j < photo.length; j++) {
-    photoElement += '<img src="' + photos[j] + '"' + 'class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>';
-  }
-  return photoElement;
-};
+// for (var i = 0; i < adverts.length; i++) {
+//   fragment.appendChild(createPins(adverts[i]));
+// }
 
-var createPopup = function (popup) {
-  var popupElement = cardTemplate.cloneNode(true);
-  popupElement.querySelector('.popup__title').textContent = popup.offer.title;
-  popupElement.querySelector('.popup__text--address').textContent = popup.offer.address;
-  popupElement.querySelector('.popup__text--price').textContent = popup.offer.price + ' ₽/ночь';
-  popupElement.querySelector('.popup__type').textContent = getRoomsType(popup.offer.type);
-  popupElement.querySelector('.popup__text--capacity').textContent = popup.offer.rooms + ' комнаты для ' + popup.offer.guests + ' гостей.';
-  popupElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + popup.offer.checkin + ', выезд до ' + popup.offer.checkout;
-  popupElement.querySelector('.popup__features').innerHTML = createFeatures(popup.offer.features);
-  popupElement.querySelector('.popup__description').textContent = popup.offer.description;
-  popupElement.querySelector('.popup__photos').innerHTML = createPhotos(popup.offer.photos);
-  popupElement.querySelector('.popup__avatar').src = popup.author.avatar;
-  return popupElement;
-};
+// mapPins.appendChild(fragment);
 
-document.querySelector('.map').insertBefore(createPopup(adverts[0]), document.querySelector('.map__filters-container'));
+// var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+
+// var getRoomsType = function (type) {
+//   if (type === 'flat') {
+//     return 'Квартира';
+//   } else if (type === 'bungalo') {
+//     return 'Бунгало';
+//   } else if (type === 'house') {
+//     return 'Дом';
+//   }
+//   return 'Дворец';
+// };
+
+// var createFeatures = function (fts) {
+//   var featureElement = '';
+
+//   for (var j = 0; j < fts.length; j++) {
+//     featureElement += '<li class="popup__feature popup__feature--' + features[j] + '"></li>';
+//   }
+//   return featureElement;
+// };
+
+// var createPhotos = function (photo) {
+//   var photoElement = '';
+
+//   for (var j = 0; j < photo.length; j++) {
+//     photoElement += '<img src="' + photos[j] + '"' + 'class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>';
+//   }
+//   return photoElement;
+// };
+
+// // создание карточки объявления
+// var createPopup = function (popup) {
+//   var popupElement = cardTemplate.cloneNode(true);
+//   popupElement.querySelector('.popup__title').textContent = popup.offer.title;
+//   popupElement.querySelector('.popup__text--address').textContent = popup.offer.address;
+//   popupElement.querySelector('.popup__text--price').textContent = popup.offer.price + ' ₽/ночь';
+//   popupElement.querySelector('.popup__type').textContent = getRoomsType(popup.offer.type);
+//   popupElement.querySelector('.popup__text--capacity').textContent = popup.offer.rooms + ' комнаты для ' + popup.offer.guests + ' гостей.';
+//   popupElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + popup.offer.checkin + ', выезд до ' + popup.offer.checkout;
+//   popupElement.querySelector('.popup__features').innerHTML = createFeatures(popup.offer.features);
+//   popupElement.querySelector('.popup__description').textContent = popup.offer.description;
+//   popupElement.querySelector('.popup__photos').innerHTML = createPhotos(popup.offer.photos);
+//   popupElement.querySelector('.popup__avatar').src = popup.author.avatar;
+//   return popupElement;
+// };
+
+// // вставка карточки (первого элемента массива) на карту
+// document.querySelector('.map').insertBefore(createPopup(adverts[0]), document.querySelector('.map__filters-container'));
