@@ -92,8 +92,8 @@ var toActive = function () {
   mainForm.classList.remove('ad-form--disabled');
   fillAddressForActiveMap(mainPin);
 
-  for (var j = 0; j < formElements.length; j++) {
-    formElements[j].removeAttribute('disabled', 'disabled');
+  for (var k = 0; k < formElements.length; k++) {
+    formElements[k].removeAttribute('disabled', 'disabled');
   }
 };
 
