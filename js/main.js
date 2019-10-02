@@ -64,8 +64,10 @@ var map = document.querySelector('.map');
 
 // делаем элементы управления формы неактивными
 var formElements = document.querySelectorAll('.map__filter');
-formElements.setAttribute('disabled');
-// !!ошибка formElements.setAttribute is not a function
+
+for (var j = 0; j < formElements.length; j++) {
+  formElements[j].setAttribute('disabled', 'disabled');
+}
 
 // добавляем обработчик события mousedown на элемент .map__pin--main, переводящий страницу из неактивного состояния в активное
 var mainPin = document.querySelector('.map__pin--main');
@@ -74,21 +76,25 @@ var addressInput = document.getElementById('address');
 
 // добавляем в инпут адреса изначальные координаты центра метки при неактивном состоянии страницы
 var fillAddressForInactiveMap = function (element) {
-  addressInput.value = Math.round(element.style.left + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(element.style.top + MAIN_PIN_HEIGHT / 2));
+  addressInput.value = Math.round(parseInt(element.style.left, 10) + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(parseInt(element.style.top, 10) + MAIN_PIN_HEIGHT / 2));
 };
 
 fillAddressForInactiveMap(mainPin);
-// !!и это не работает - возвращает (Nan, Nan), потому что element.style.left - это, видимо, не число получается. А надо, его преобразовать в число...
 
 // добавляем в инпут адреса координаты острого конца метки при активном состоянии страницы
 var fillAddressForActiveMap = function (element) {
-  addressInput.value = Math.round(element.style.left + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(element.style.top + MAIN_PIN_HEIGHT + MAIN_PIN_POINT_HEIGHT));
+  addressInput.value = Math.round(parseInt(element.style.left, 10) + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(parseInt(element.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_POINT_HEIGHT));
+  addressInput.setAttribute('readonly', 'readonly');
 };
 
 var toActive = function () {
   map.classList.remove('map--faded');
   mainForm.classList.remove('ad-form--disabled');
   fillAddressForActiveMap(mainPin);
+
+  for (var j = 0; j < formElements.length; j++) {
+    formElements[j].removeAttribute('disabled', 'disabled');
+  }
 };
 
 mainPin.addEventListener('click', function () {
@@ -101,7 +107,36 @@ mainPin.addEventListener('keydown', function (evt) {
   }
 });
 
-// !!про соотношение комнат-гостей, пока нет идей как это сделать, нужна наводка)
+// сверка гостей и комнат
+var inputRooms = document.getElementById('room_number');
+var inputCapacity = document.getElementById('capacity');
+
+var syncroniseRooms = function (rooms, capacity) {
+  for (var i = 0; i < capacity.options.length; i++) {
+    capacity.options[i].disabled = true;
+  }
+  switch (rooms.value) {
+    case '1':
+      capacity.options[2].disabled = false;
+      break;
+    case '2':
+      capacity.options[1].disabled = false;
+      capacity.options[2].disabled = false;
+      break;
+    case '3':
+      capacity.options[0].disabled = false;
+      capacity.options[1].disabled = false;
+      capacity.options[2].disabled = false;
+      break;
+    case '100':
+      capacity.options[3].disabled = false;
+      break;
+  }
+};
+
+inputRooms.addEventListener('change', function () {
+  syncroniseRooms(inputRooms, inputCapacity);
+});
 
 // var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 // var mapPins = document.querySelector('.map__pins');
