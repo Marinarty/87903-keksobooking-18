@@ -138,19 +138,19 @@ var roomsGuests = {
 };
 
 inputRooms.addEventListener('change', function () {
-  var currentValue = this.value;
+  var currentValue = inputRooms.value;
   var massive = roomsGuests[currentValue];
 
-  for (var i = 0; i < inputCapacity.options.length; i++) {
-    var option = inputCapacity.options[i];
+  for (var l = 0; l < inputCapacity.options.length; l++) {
+    var option = inputCapacity.options[l];
     option.disabled = true;
 
-    for (var j = 0; j < massive.length; j++) {
-      if (massive[j] === Number(option.value)) {
+    for (var m = 0; m < massive.length; m++) {
+      if (massive[m] === Number(option.value)) {
         option.disabled = false;
       }
     }
-   }
+  }
 });
 
 // var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
