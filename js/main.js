@@ -61,6 +61,24 @@ createAds(adsNumber);
 
 
 var map = document.querySelector('.map');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapPins = document.querySelector('.map__pins');
+var fragment = document.createDocumentFragment();
+
+var createPins = function (ads) {
+  var adsElement = pinTemplate.cloneNode(true);
+  adsElement.style.left = ads.location.x + 'px';
+  adsElement.style.top = ads.location.y + 'px';
+  adsElement.querySelector('img').src = ads.author.avatar;
+  adsElement.querySelector('img').alt = ads.offer.title;
+  return adsElement;
+};
+
+for (var i = 0; i < adverts.length; i++) {
+  fragment.appendChild(createPins(adverts[i]));
+}
+
+// mapPins.appendChild(fragment);
 
 // делаем элементы управления формы неактивными
 var formElements = document.querySelectorAll('.map__filter');
@@ -91,6 +109,7 @@ var toActive = function () {
   map.classList.remove('map--faded');
   mainForm.classList.remove('ad-form--disabled');
   fillAddressForActiveMap(mainPin);
+  mapPins.appendChild(fragment);
 
   for (var k = 0; k < formElements.length; k++) {
     formElements[k].removeAttribute('disabled', 'disabled');
@@ -118,60 +137,21 @@ var roomsGuests = {
   100: [0]
 };
 
-inputCapacity.addEventListener('change', function () {
+inputRooms.addEventListener('change', function () {
   var currentValue = this.value;
-  for (var i = 0; i < inputRooms.options.length; i++) {
-    inputRooms.options[i].disabled = true;
-  }
-  if (currentValue === 1) {
-    inputRooms.options[0].disabled = false;
-  };
+  var massive = roomsGuests[currentValue];
+
+  for (var i = 0; i < inputCapacity.options.length; i++) {
+    var option = inputCapacity.options[i];
+    option.disabled = true;
+
+    for (var j = 0; j < massive.length; j++) {
+      if (massive[j] === Number(option.value)) {
+        option.disabled = false;
+      }
+    }
+   }
 });
-// var syncroniseRooms = function (rooms, capacity) {
-//   for (var i = 0; i < capacity.options.length; i++) {
-//     capacity.options[i].disabled = true;
-//   }
-//   switch (rooms.value) {
-//     case '1':
-//       capacity.options[2].disabled = false;
-//       break;
-//     case '2':
-//       capacity.options[1].disabled = false;
-//       capacity.options[2].disabled = false;
-//       break;
-//     case '3':
-//       capacity.options[0].disabled = false;
-//       capacity.options[1].disabled = false;
-//       capacity.options[2].disabled = false;
-//       break;
-//     case '100':
-//       capacity.options[3].disabled = false;
-//       break;
-//   }
-// };
-
-// inputRooms.addEventListener('change', function () {
-//   syncroniseRooms(inputRooms, inputCapacity);
-// });
-
-// var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-// var mapPins = document.querySelector('.map__pins');
-// var fragment = document.createDocumentFragment();
-
-// var createPins = function (ads) {
-//   var adsElement = pinTemplate.cloneNode(true);
-//   adsElement.style.left = ads.location.x + 'px';
-//   adsElement.style.top = ads.location.y + 'px';
-//   adsElement.querySelector('img').src = ads.author.avatar;
-//   adsElement.querySelector('img').alt = ads.offer.title;
-//   return adsElement;
-// };
-
-// for (var i = 0; i < adverts.length; i++) {
-//   fragment.appendChild(createPins(adverts[i]));
-// }
-
-// mapPins.appendChild(fragment);
 
 // var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
