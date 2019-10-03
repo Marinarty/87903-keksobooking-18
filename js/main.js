@@ -111,32 +111,48 @@ mainPin.addEventListener('keydown', function (evt) {
 var inputRooms = document.getElementById('room_number');
 var inputCapacity = document.getElementById('capacity');
 
-var syncroniseRooms = function (rooms, capacity) {
-  for (var i = 0; i < capacity.options.length; i++) {
-    capacity.options[i].disabled = true;
-  }
-  switch (rooms.value) {
-    case '1':
-      capacity.options[2].disabled = false;
-      break;
-    case '2':
-      capacity.options[1].disabled = false;
-      capacity.options[2].disabled = false;
-      break;
-    case '3':
-      capacity.options[0].disabled = false;
-      capacity.options[1].disabled = false;
-      capacity.options[2].disabled = false;
-      break;
-    case '100':
-      capacity.options[3].disabled = false;
-      break;
-  }
+var roomsGuests = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
 };
 
-inputRooms.addEventListener('change', function () {
-  syncroniseRooms(inputRooms, inputCapacity);
+inputCapacity.addEventListener('change', function () {
+  var currentValue = this.value;
+  for (var i = 0; i < inputRooms.options.length; i++) {
+    inputRooms.options[i].disabled = true;
+  }
+  if (currentValue === 1) {
+    inputRooms.options[0].disabled = false;
+  };
 });
+// var syncroniseRooms = function (rooms, capacity) {
+//   for (var i = 0; i < capacity.options.length; i++) {
+//     capacity.options[i].disabled = true;
+//   }
+//   switch (rooms.value) {
+//     case '1':
+//       capacity.options[2].disabled = false;
+//       break;
+//     case '2':
+//       capacity.options[1].disabled = false;
+//       capacity.options[2].disabled = false;
+//       break;
+//     case '3':
+//       capacity.options[0].disabled = false;
+//       capacity.options[1].disabled = false;
+//       capacity.options[2].disabled = false;
+//       break;
+//     case '100':
+//       capacity.options[3].disabled = false;
+//       break;
+//   }
+// };
+
+// inputRooms.addEventListener('change', function () {
+//   syncroniseRooms(inputRooms, inputCapacity);
+// });
 
 // var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 // var mapPins = document.querySelector('.map__pins');
