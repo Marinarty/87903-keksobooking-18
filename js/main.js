@@ -65,6 +65,7 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 var mapPins = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
 
+// создаю пин setAttribute('id', 'i');
 var createPins = function (ads) {
   var adsElement = pinTemplate.cloneNode(true);
   adsElement.style.left = ads.location.x + 'px';
@@ -74,6 +75,7 @@ var createPins = function (ads) {
   return adsElement;
 };
 
+// вывожу пин
 for (var i = 0; i < adverts.length; i++) {
   fragment.appendChild(createPins(adverts[i]));
 }
@@ -225,3 +227,81 @@ var createPopup = function (popup) {
 //   });
 // }
 
+// валидация формы
+
+var adTitleInput = document.getElementById('title');
+var adPriceInput = document.getElementById('price');
+var adTypeSelect = document.getElementById('type');
+var adTimeInSelect = document.getElementById('timein');
+var adTimeOutSelect = document.getElementById('timeout');
+
+adTitleInput.addEventListener('invalid', function (evt) {
+  if (adTitleInput.validity.tooShort) {
+    adTitleInput.setCustomValidity('Должно состоять минимум из 30 символов');
+  } else if (adTitleInput.validity.tooLong) {
+    adTitleInput.setCustomValidity('Не должно превышать 100 символов');
+  } else if (adTitleInput.validity.valueMissing) {
+    adTitleInput.setCustomValidity('Обязательно для заполнения');
+  } else {
+    adTitleInput.setCustomValidity('');
+  }
+});
+
+adPriceInput.addEventListener('invalid', function (evt) {
+  if (adPriceInput.validity.rangeOverflow) {
+    adPriceInput.setCustomValidity('Цена за ночь не должна превышать 1 000 000 рублей');
+  } else if (adPriceInput.validity.rangeUnderflow) {
+    adPriceInput.setCustomValidity('Цена за ночь не может быть менее 0 рублей');
+  } else if (adPriceInput.validity.valueMissing) {
+    adPriceInput.setCustomValidity('Обязательно для заполнения');
+  } else {
+    adPriceInput.setCustomValidity('');
+  }
+});
+
+var checkPriceType = function () {
+  switch (adTypeSelect.value) {
+    case 'bungalo':
+      adPriceInput.min = 0;
+      adPriceInput.placeholder = '0';
+      break;
+    case 'flat':
+      adPriceInput.min = 1000;
+      adPriceInput.placeholder = '1000';
+      break;
+    case 'house':
+      adPriceInput.min = 5000;
+      adPriceInput.placeholder = '5000';
+      break;
+    case 'palace':
+      adPriceInput.min = 10000;
+      adPriceInput.placeholder = '10000';
+      break;
+  }
+};
+
+var checkTimeInOut = function (time1, time2) {
+  switch (time1.value) {
+    case '12:00':
+      time2.value = '12:00';
+      break;
+    case '13:00':
+      time2.value = '13:00';
+      break;
+    case '14:00':
+      time2.value = '14:00';
+      break;
+  }
+};
+
+adTypeSelect.addEventListener('change', function () {
+  checkPriceType();
+});
+
+adTimeInSelect.addEventListener('change', function () {
+  checkTimeInOut(adTimeInSelect, adTimeOutSelect);
+});
+
+adTimeOutSelect.addEventListener('change', function () {
+  checkTimeInOut(adTimeOutSelect, adTimeInSelect);
+});
