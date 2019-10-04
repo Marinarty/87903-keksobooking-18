@@ -105,6 +105,8 @@ var fillAddressForActiveMap = function (element) {
   addressInput.setAttribute('readonly', 'readonly');
 };
 
+
+
 var toActive = function () {
   map.classList.remove('map--faded');
   mainForm.classList.remove('ad-form--disabled');
@@ -113,6 +115,14 @@ var toActive = function () {
 
   for (var k = 0; k < formElements.length; k++) {
     formElements[k].removeAttribute('disabled', 'disabled');
+  }
+
+  var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+  for (var j = 0; j < mapPin.length; j++) {
+    mapPin[j].addEventListener('click', function () {
+        document.querySelector('.map').insertBefore(createPopup(adverts[j]), document.querySelector('.map__filters-container'));
+    });
   }
 };
 
@@ -205,13 +215,13 @@ var createPopup = function (popup) {
 // вставка карточки на карту
 
 
-var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+// var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-for (var j = 0; j < mapPin.length; j++) {
-  mapPin[j].addEventListener('click', function () {
-    for (var i = 0; i < adverts.length; i++) {
-      document.querySelector('.map').insertBefore(createPopup(adverts[i]), document.querySelector('.map__filters-container'));
-    }
-  });
-}
+// for (var j = 0; j < mapPin.length; j++) {
+//   mapPin[j].addEventListener('click', function () {
+//     for (var i = 0; i < adverts.length; i++) {
+//       document.querySelector('.map').insertBefore(createPopup(adverts[i]), document.querySelector('.map__filters-container'));
+//     }
+//   });
+// }
 
