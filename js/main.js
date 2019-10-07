@@ -127,15 +127,24 @@ var toActive = function () {
       var dataId = evt.target.parentNode.getAttribute('data-id');
       document.querySelector('.map').insertBefore(createPopup(adverts[dataId]), document.querySelector('.map__filters-container'));
 
-      var popUp = document.querySelector('.popup');
-      var popupClose = document.querySelector('.popup__close');
+      var popUp = document.querySelectorAll('.popup');
+      var popupClose = document.querySelectorAll('.popup__close');
 
-      popupClose.addEventListener('click', function () {
-        popUp.classList.add('hidden');
+      for (var p = 0; p < popupClose.length; p++) {
+      popupClose[p].addEventListener('click', function () {
+        for (var z = 0; z < popUp.length; z++) {
+          popUp[z].classList.add('hidden');
+
+        }
+
+
+
       });
-    });
+    };
+  });
   }
 };
+
 
 mainPin.addEventListener('click', function () {
   toActive();
