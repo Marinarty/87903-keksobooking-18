@@ -65,19 +65,21 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 var mapPins = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
 
-// создаю пин setAttribute('id', 'i');
-var createPins = function (ads) {
+// создаю пин
+var createPins = function (ads, id) {
   var adsElement = pinTemplate.cloneNode(true);
   adsElement.style.left = ads.location.x + 'px';
   adsElement.style.top = ads.location.y + 'px';
   adsElement.querySelector('img').src = ads.author.avatar;
   adsElement.querySelector('img').alt = ads.offer.title;
+  adsElement.setAttribute('data-id', id);
   return adsElement;
 };
 
+
 // вывожу пин
 for (var i = 0; i < adverts.length; i++) {
-  fragment.appendChild(createPins(adverts[i]));
+  fragment.appendChild(createPins(adverts[i], i));
 }
 
 // mapPins.appendChild(fragment);
@@ -107,8 +109,6 @@ var fillAddressForActiveMap = function (element) {
   addressInput.setAttribute('readonly', 'readonly');
 };
 
-
-
 var toActive = function () {
   map.classList.remove('map--faded');
   mainForm.classList.remove('ad-form--disabled');
@@ -122,8 +122,17 @@ var toActive = function () {
   var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
   for (var j = 0; j < mapPin.length; j++) {
-    mapPin[j].addEventListener('click', function () {
-        document.querySelector('.map').insertBefore(createPopup(adverts[j]), document.querySelector('.map__filters-container'));
+    mapPin[j].addEventListener('click', function (evt) {
+
+      var dataId = evt.target.parentNode.getAttribute('data-id');
+      document.querySelector('.map').insertBefore(createPopup(adverts[dataId]), document.querySelector('.map__filters-container'));
+
+      var popUp = document.querySelector('.popup');
+      var popupClose = document.querySelector('.popup__close');
+
+      popupClose.addEventListener('click', function () {
+        popUp.classList.add('hidden');
+      });
     });
   }
 };
@@ -235,7 +244,7 @@ var adTypeSelect = document.getElementById('type');
 var adTimeInSelect = document.getElementById('timein');
 var adTimeOutSelect = document.getElementById('timeout');
 
-adTitleInput.addEventListener('invalid', function (evt) {
+adTitleInput.addEventListener('invalid', function () {
   if (adTitleInput.validity.tooShort) {
     adTitleInput.setCustomValidity('Должно состоять минимум из 30 символов');
   } else if (adTitleInput.validity.tooLong) {
@@ -247,7 +256,7 @@ adTitleInput.addEventListener('invalid', function (evt) {
   }
 });
 
-adPriceInput.addEventListener('invalid', function (evt) {
+adPriceInput.addEventListener('invalid', function () {
   if (adPriceInput.validity.rangeOverflow) {
     adPriceInput.setCustomValidity('Цена за ночь не должна превышать 1 000 000 рублей');
   } else if (adPriceInput.validity.rangeUnderflow) {
@@ -259,43 +268,22 @@ adPriceInput.addEventListener('invalid', function (evt) {
   }
 });
 
-var checkPriceType = function () {
-  switch (adTypeSelect.value) {
-    case 'bungalo':
-      adPriceInput.min = 0;
-      adPriceInput.placeholder = '0';
-      break;
-    case 'flat':
-      adPriceInput.min = 1000;
-      adPriceInput.placeholder = '1000';
-      break;
-    case 'house':
-      adPriceInput.min = 5000;
-      adPriceInput.placeholder = '5000';
-      break;
-    case 'palace':
-      adPriceInput.min = 10000;
-      adPriceInput.placeholder = '10000';
-      break;
-  }
+var checkTimeInOut = function (timeFirst, timeSecond) {
+  timeSecond.value = timeFirst.value;
 };
 
-var checkTimeInOut = function (time1, time2) {
-  switch (time1.value) {
-    case '12:00':
-      time2.value = '12:00';
-      break;
-    case '13:00':
-      time2.value = '13:00';
-      break;
-    case '14:00':
-      time2.value = '14:00';
-      break;
-  }
+var typePrice = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
 };
 
 adTypeSelect.addEventListener('change', function () {
-  checkPriceType();
+  var currentValue = adTypeSelect.value;
+  var currentPrice = typePrice[currentValue];
+  adPriceInput.min = currentPrice;
+  adPriceInput.placeholder = currentPrice;
 });
 
 adTimeInSelect.addEventListener('change', function () {
