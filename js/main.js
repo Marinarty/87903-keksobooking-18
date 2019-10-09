@@ -130,15 +130,13 @@ var toActive = function () {
       var popUp = document.querySelectorAll('.popup');
       var popupClose = document.querySelectorAll('.popup__close');
 
+
       for (var p = 0; p < popupClose.length; p++) {
       popupClose[p].addEventListener('click', function () {
+        // createPopup(adverts[p]).remove();
         for (var z = 0; z < popUp.length; z++) {
           popUp[z].classList.add('hidden');
-
         }
-
-
-
       });
     };
   });
