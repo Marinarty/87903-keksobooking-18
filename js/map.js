@@ -15,8 +15,8 @@
 
 
   // делаем элементы управления формы неактивными
-  for (var j = 0; j < formElements.length; j++) {
-    formElements[j].setAttribute('disabled', 'disabled');
+  for (var i = 0; i < formElements.length; i++) {
+    formElements[i].setAttribute('disabled', 'disabled');
   }
 
   // добавляем в инпут адреса изначальные координаты центра метки при неактивном состоянии страницы
@@ -48,7 +48,7 @@
       mapPin[j].addEventListener('click', function (evt) {
 
         var dataId = evt.target.parentNode.getAttribute('data-id');
-        document.querySelector('.map').insertBefore(window.card.createPopup(adverts[dataId]), document.querySelector('.map__filters-container'));
+        document.querySelector('.map').insertBefore(window.card.createPopup(window.data.adverts[dataId]), document.querySelector('.map__filters-container'));
         var popUp = document.querySelectorAll('.popup');
         var popupClose = document.querySelectorAll('.popup__close');
 
@@ -59,7 +59,7 @@
               popUp[z].remove();
             }
           });
-        };
+        }
       });
     }
   };

@@ -46,7 +46,7 @@
       };
     }
     return adverts;
-  }
+  };
 
   createAds(ADS_NUMBER);
 
