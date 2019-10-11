@@ -11,8 +11,6 @@
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 62;
   var MAIN_PIN_POINT_HEIGHT = 22;
-  var fragment = document.createDocumentFragment(); // пришлось продублировать !!!!!!!!!!!!!
-
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -36,7 +34,7 @@
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
-    mapPins.appendChild(fragment);
+    mapPins.appendChild(window.pin.fragment);
 
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
