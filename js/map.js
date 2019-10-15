@@ -10,7 +10,9 @@
   var addressInput = document.getElementById('address');
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 62;
-  var MAIN_PIN_POINT_HEIGHT = 22;
+  var MAIN_PIN_POINT_HEIGHT = 22; // высота острого конца метки
+  var MAP_Y_MIN = 130; // минимальная кордината метки по Y
+  var MAP_Y_MAX = 630; // максимальгая кордината метки по Y
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -62,9 +64,89 @@
     }
   };
 
-  // добавляем обработчик события click на элемент .map__pin--main, переводящий страницу из неактивного состояния в активное
-  mainPin.addEventListener('click', function () {
+  // добавляем в инпут адреса координаты острого конца метки при перемещении метки
+  var fillAddressForChangingCoords = function (element) {
+    addressInput.value = Math.round(element.offsetLeft + element.offsetWidth / 2) + ', ' + (Math.round(element.offsetTop + element.offsetHeight + MAIN_PIN_POINT_HEIGHT));
+  };
+
+  // ограничиваем координату Х, если она выпадает за пределы  блока map__pins
+  var catchXCoord = function (x) {
+    var start = mapPins.offsetLeft - mainPin.offsetWidth / 2;
+    var end = mapPins.offsetLeft + mapPins.offsetWidth - mainPin.offsetWidth / 2; // почему нет offsetRight?
+
+    if (x < start) {
+      return start;
+    }
+    if (x > end) {
+      return end;
+    }
+    return x;
+  };
+
+  // ограничиваем координату Y, если она выпадает за пределы  блока map__pins
+  var catchYCoord = function (y) {
+    var start = mapPins.offsetTop + MAP_Y_MIN - mainPin.offsetHeight - MAIN_PIN_POINT_HEIGHT;
+    var end = mapPins.offsetTop + MAP_Y_MAX - mainPin.offsetHeight - MAIN_PIN_POINT_HEIGHT;
+    if (y < start) {
+      return start;
+    }
+    if (y > end) {
+      return end;
+    }
+    return y;
+  };
+
+  // добавляем обработчик события mousedown на элемент .map__pin--main, переводящий страницу из неактивного состояния в активное и следит за перемещением главного пина
+  mainPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
     toActive();
+
+    var startCoords = {
+      x: mainPin.offsetLeft,
+      y: mainPin.offsetTop
+    };
+
+    var startClientCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startClientCoords.x - moveEvt.clientX,
+        y: startClientCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: startCoords.x - shift.x,
+        y: startCoords.y - shift.y
+      };
+
+      startClientCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY,
+      };
+
+      mainPin.style.left = catchXCoord(startCoords.x) + 'px';
+      mainPin.style.top = catchYCoord(startCoords.y) + 'px';
+
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      fillAddressForChangingCoords(mainPin);
+
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
   });
 
   mainPin.addEventListener('keydown', function (evt) {
