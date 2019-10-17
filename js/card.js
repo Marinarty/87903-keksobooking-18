@@ -19,7 +19,7 @@
     var featureElement = '';
 
     for (var j = 0; j < fts.length; j++) {
-      featureElement += '<li class="popup__feature popup__feature--' + window.data.FEATURES[j] + '"></li>';
+      featureElement += '<li class="popup__feature popup__feature--' + fts[j] + '"></li>';
     }
     return featureElement;
   };
@@ -28,7 +28,7 @@
     var photoElement = '';
 
     for (var j = 0; j < photo.length; j++) {
-      photoElement += '<img src="' + window.data.PHOTOS[j] + '"' + 'class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>';
+      photoElement += '<img src="' + photo[j] + '"' + 'class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>';
     }
     return photoElement;
   };

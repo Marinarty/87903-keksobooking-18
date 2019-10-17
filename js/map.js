@@ -32,11 +32,11 @@
     addressInput.setAttribute('readonly', 'readonly');
   };
 
-  var toActive = function () {
+  var toActive = function (response) {
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
-    mapPins.appendChild(window.pin.fragment);
+    mapPins.appendChild(window.pin.renderPins(response));
 
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
@@ -46,20 +46,23 @@
 
     for (var j = 0; j < mapPin.length; j++) {
       mapPin[j].addEventListener('click', function (evt) {
-
-        var dataId = evt.target.parentNode.getAttribute('data-id');
-        document.querySelector('.map').insertBefore(window.card.createPopup(window.data.adverts[dataId]), document.querySelector('.map__filters-container'));
-        var popUp = document.querySelectorAll('.popup');
-        var popupClose = document.querySelectorAll('.popup__close');
-
-        for (var p = 0; p < popupClose.length; p++) {
-          popupClose[p].addEventListener('click', function () {
-
-            for (var z = 0; z < popUp.length; z++) {
-              popUp[z].remove();
-            }
-          });
+        var popUp = document.querySelector('.popup');
+        if (popUp) {
+          popUp.remove();
         }
+
+        if (evt.target.tagName === 'BUTTON') {
+          var dataId = evt.target.getAttribute('data-id');
+        } else {
+          var dataId = evt.target.parentNode.getAttribute('data-id');
+        }
+
+        document.querySelector('.map').insertBefore(window.card.createPopup(response[dataId]), document.querySelector('.map__filters-container'));
+        var popupClose = document.querySelector('.popup__close');
+        popupClose.addEventListener('click', function () {
+          var popUp = document.querySelector('.popup');
+          popUp.remove();
+        });
       });
     }
   };
@@ -72,7 +75,7 @@
   // ограничиваем координату Х, если она выпадает за пределы  блока map__pins
   var catchXCoord = function (x) {
     var start = mapPins.offsetLeft - mainPin.offsetWidth / 2;
-    var end = mapPins.offsetLeft + mapPins.offsetWidth - mainPin.offsetWidth / 2; // почему нет offsetRight?
+    var end = mapPins.offsetLeft + mapPins.offsetWidth - mainPin.offsetWidth / 2;
 
     if (x < start) {
       return start;
@@ -97,9 +100,14 @@
   };
 
   // добавляем обработчик события mousedown на элемент .map__pin--main, переводящий страницу из неактивного состояния в активное и следит за перемещением главного пина
+  var counter = 0;
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    toActive();
+    // toActive();
+    if (!counter) {
+    window.load('https://js.dump.academy/keksobooking/data', toActive, errorHundler);
+    counter++;
+    };
 
     var startCoords = {
       x: mainPin.offsetLeft,
@@ -154,4 +162,8 @@
       toActive();
     }
   });
+
+  window.map = {
+   toActive: toActive
+  };
 })();
