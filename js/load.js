@@ -27,14 +27,5 @@
 
     xhr.open('GET', url);
     xhr.send();
-  }
+  };
 })();
-
-// отрисовка сообщения об ошибке при провале
-var errorHundler = function () {
-  var main = document.querySelector('main');
-  var errorTemplateId = document.querySelector('#error');
-  var errorTemplate = errorTemplateId.content.querySelector('.error');
-  var errorElement = errorTemplate.cloneNode(true);
-  main.appendChild(errorElement);
-};

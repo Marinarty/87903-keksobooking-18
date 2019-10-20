@@ -103,11 +103,10 @@
   var counter = 0;
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    // toActive();
     if (!counter) {
-    window.load('https://js.dump.academy/keksobooking/data', toActive, errorHundler);
-    counter++;
-    };
+      window.load('https://js.dump.academy/keksobooking/data', toActive, errorHundler);
+      counter++;
+    }
 
     var startCoords = {
       x: mainPin.offsetLeft,
@@ -163,7 +162,16 @@
     }
   });
 
+  // отрисовка сообщения об ошибке при провале
+  var errorHundler = function () {
+    var main = document.querySelector('main');
+    var errorTemplateId = document.querySelector('#error');
+    var errorTemplate = errorTemplateId.content.querySelector('.error');
+    var errorElement = errorTemplate.cloneNode(true);
+    main.appendChild(errorElement);
+  };
+
   window.map = {
-   toActive: toActive
+    toActive: toActive
   };
 })();
