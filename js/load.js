@@ -3,8 +3,6 @@
 
 (function () {
   window.load = function (url, onSuccess, onError) {
-    // var url = 'https://js.dump.academy/keksobooking/data';
-
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -32,23 +30,11 @@
   }
 })();
 
-
-var successHundler = function (response) {
-  // отрисовка пинов при успехе
-window.map.toActive(response);
-  console.log('sc')
-}
-
+// отрисовка сообщения об ошибке при провале
 var errorHundler = function () {
-
-  console.log('er');
-  // отрисовка сообщения об ошибке при провале
   var main = document.querySelector('main');
-  var errorTemplate = document.querySelector('#error');
-  var errorMessage = errorTemplate.cloneNode(true);
-  main.appendChild(errorMessage);
-
-
-}
-
-// window.load('https://js.dump.academy/keksobooking/data', successHundler, errorHundler)
+  var errorTemplateId = document.querySelector('#error');
+  var errorTemplate = errorTemplateId.content.querySelector('.error');
+  var errorElement = errorTemplate.cloneNode(true);
+  main.appendChild(errorElement);
+};
