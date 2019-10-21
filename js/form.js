@@ -84,5 +84,4 @@
   adTimeOutSelect.addEventListener('change', function () {
     checkTimeInOut(adTimeOutSelect, adTimeInSelect);
   });
-
 })();

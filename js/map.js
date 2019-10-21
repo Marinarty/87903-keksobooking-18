@@ -32,6 +32,8 @@
     addressInput.setAttribute('readonly', 'readonly');
   };
 
+
+  // в активное состояние карты
   var toActive = function (response) {
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
@@ -66,6 +68,40 @@
       });
     }
   };
+
+
+
+
+
+
+
+  // в НЕактивное состояние карты
+  var toInactive = function () {
+    map.classList.add('map--faded');
+    fillAddressForInactiveMap(mainPin);
+    mainForm.classList.add('ad-form--disabled');
+  };
+
+  mainForm.addEventListener('submit', formSubmitHandler);
+
+  var formSubmitHandler = function (evt) {
+    window.upload(new FormData(mainForm), successHandler, errorHandler);
+    evt.preventDefault();
+  };
+
+  var successHandler = function () {
+    // вывести сообщение об успехе
+    mainForm.reset();
+    toInactive();
+    // убрать метки
+  };
+
+
+
+
+
+
+
 
   // добавляем в инпут адреса координаты острого конца метки при перемещении метки
   var fillAddressForChangingCoords = function (element) {
