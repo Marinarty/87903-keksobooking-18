@@ -77,17 +77,14 @@
 
   // в НЕактивное состояние карты
   var toInactive = function () {
-    map.classList.add('map--faded');
     fillAddressForInactiveMap(mainPin);
     mainForm.classList.add('ad-form--disabled');
   };
 
-  mainForm.addEventListener('submit', formSubmitHandler);
-
-  var formSubmitHandler = function (evt) {
-    window.upload(new FormData(mainForm), successHandler, errorHandler);
+  mainForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(mainForm), successHandler, window.messages.errorHandler);
     evt.preventDefault();
-  };
+  });
 
   var successHandler = function () {
     // вывести сообщение об успехе
@@ -140,7 +137,7 @@
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     if (!counter) {
-      window.load('https://js.dump.academy/keksobooking/data', toActive, errorHundler);
+      window.load('https://js.dump.academy/dkeksobooking/data', toActive, window.messages.errorHundler);
       counter++;
     }
 
@@ -197,15 +194,6 @@
       toActive();
     }
   });
-
-  // отрисовка сообщения об ошибке при провале
-  var errorHundler = function () {
-    var main = document.querySelector('main');
-    var errorTemplateId = document.querySelector('#error');
-    var errorTemplate = errorTemplateId.content.querySelector('.error');
-    var errorElement = errorTemplate.cloneNode(true);
-    main.appendChild(errorElement);
-  };
 
   window.map = {
     toActive: toActive
