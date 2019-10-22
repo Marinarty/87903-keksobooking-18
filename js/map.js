@@ -3,7 +3,7 @@
 
 (function () {
   var map = document.querySelector('.map');
-  var formElements = document.querySelectorAll('.map__filter');
+  var formElements = document.querySelectorAll('.notice fieldset');
   var mainPin = document.querySelector('.map__pin--main');
   var mainForm = document.querySelector('.ad-form');
   var mapPins = document.querySelector('.map__pins');
@@ -82,12 +82,12 @@
   };
 
   mainForm.addEventListener('submit', function (evt) {
-    window.upload(new FormData(mainForm), successHandler, window.messages.errorHandler);
+    window.upload(new FormData(mainForm), successHandler, window.messages.errorHundler);
     evt.preventDefault();
   });
 
   var successHandler = function () {
-    // вывести сообщение об успехе
+    window.messages.successMessage();
     mainForm.reset();
     toInactive();
     // убрать метки
