@@ -21,15 +21,25 @@
     });
 
     errorElement.addEventListener('click', function () {
-        errorElement.remove();
+      errorElement.remove();
     });
   };
 
   var successMessage = function () {
     var successTemplateId = document.querySelector('#success');
     var successTemplate = successTemplateId.content.querySelector('.success');
-    var successMessage = successTemplate.cloneNode(true);
-    main.appendChild(successMessage);
+    var successNotice = successTemplate.cloneNode(true);
+    main.appendChild(successNotice);
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+        successNotice.remove();
+      }
+    });
+
+    successNotice.addEventListener('click', function () {
+      successNotice.remove();
+    });
   };
 
   window.messages = {

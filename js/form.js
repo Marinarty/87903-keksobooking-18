@@ -35,7 +35,7 @@
   });
 
   // валидация формы
-  adTitleInput.addEventListener('invalid', function () {
+  adTitleInput.addEventListener('input', function () {
     if (adTitleInput.validity.tooShort) {
       adTitleInput.setCustomValidity('Должно состоять минимум из 30 символов');
     } else if (adTitleInput.validity.tooLong) {
@@ -47,7 +47,7 @@
     }
   });
 
-  adPriceInput.addEventListener('invalid', function () {
+  adPriceInput.addEventListener('input', function () {
     if (adPriceInput.validity.rangeOverflow) {
       adPriceInput.setCustomValidity('Цена за ночь не должна превышать 1 000 000 рублей');
     } else if (adPriceInput.validity.rangeUnderflow) {
@@ -84,4 +84,7 @@
   adTimeOutSelect.addEventListener('change', function () {
     checkTimeInOut(adTimeOutSelect, adTimeInSelect);
   });
+
+  // var event = new Event('change');
+  // adTimeInSelect.dispatchEvent(event);
 })();

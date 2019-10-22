@@ -25,7 +25,6 @@
   };
 
   window.pin = {
-    // fragment: fragment
     renderPins: renderPins
   };
 })();
