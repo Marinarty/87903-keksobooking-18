@@ -3,7 +3,7 @@
 
 (function () {
   var map = document.querySelector('.map');
-  var formElements = document.querySelectorAll('.map__filter');
+  var formElements = document.querySelectorAll('.notice fieldset');
   var mainPin = document.querySelector('.map__pin--main');
   var mainForm = document.querySelector('.ad-form');
   var mapPins = document.querySelector('.map__pins');
@@ -13,6 +13,10 @@
   var MAIN_PIN_POINT_HEIGHT = 22; // высота острого конца метки
   var MAP_Y_MIN = 130; // минимальная кордината метки по Y
   var MAP_Y_MAX = 630; // максимальгая кордината метки по Y
+  var mainPinDefaultCoords = {
+    x: mainPin.style.left,
+    y: mainPin.style.top
+  };
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -32,11 +36,16 @@
     addressInput.setAttribute('readonly', 'readonly');
   };
 
+
+  // в активное состояние карты
   var toActive = function (response) {
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
     mapPins.appendChild(window.pin.renderPins(response));
+
+    // вставить куда-то сюда
+
 
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
@@ -50,20 +59,55 @@
         if (popUp) {
           popUp.remove();
         }
-
+        var dataId;
         if (evt.target.tagName === 'BUTTON') {
-          var dataId = evt.target.getAttribute('data-id');
+          dataId = evt.target.getAttribute('data-id');
         } else {
-          var dataId = evt.target.parentNode.getAttribute('data-id');
+          dataId = evt.target.parentNode.getAttribute('data-id');
         }
 
         document.querySelector('.map').insertBefore(window.card.createPopup(response[dataId]), document.querySelector('.map__filters-container'));
         var popupClose = document.querySelector('.popup__close');
         popupClose.addEventListener('click', function () {
-          var popUp = document.querySelector('.popup');
+          popUp = document.querySelector('.popup');
           popUp.remove();
         });
       });
+    }
+  };
+
+  // в НЕактивное состояние карты
+  var toInactive = function () {
+    mainPin.style.left = mainPinDefaultCoords.x;
+    mainPin.style.top = mainPinDefaultCoords.y;
+    fillAddressForInactiveMap(mainPin);
+    mainForm.classList.add('ad-form--disabled');
+
+    for (var s = 0; s < formElements.length; s++) {
+      formElements[s].setAttribute('disabled', 'disabled');
+    }
+  };
+
+  mainForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(mainForm), successHandler, window.messages.errorHundler);
+    evt.preventDefault();
+  });
+
+  var removePins = function () {
+    var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    for (var l = 0; l < mapPin.length; l++) {
+      mapPin[l].remove();
+    }
+  };
+
+  var successHandler = function () {
+    window.messages.successMessage();
+    mainForm.reset();
+    toInactive();
+    removePins();
+    var popUp = document.querySelector('.popup');
+    if (popUp) {
+      popUp.remove();
     }
   };
 
@@ -104,7 +148,7 @@
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     if (!counter) {
-      window.load('https://js.dump.academy/keksobooking/data', toActive, errorHundler);
+      window.load('https://js.dump.academy/keksobooking/data', toActive, window.messages.errorHundler);
       counter++;
     }
 
@@ -161,15 +205,6 @@
       toActive();
     }
   });
-
-  // отрисовка сообщения об ошибке при провале
-  var errorHundler = function () {
-    var main = document.querySelector('main');
-    var errorTemplateId = document.querySelector('#error');
-    var errorTemplate = errorTemplateId.content.querySelector('.error');
-    var errorElement = errorTemplate.cloneNode(true);
-    main.appendChild(errorElement);
-  };
 
   window.map = {
     toActive: toActive
