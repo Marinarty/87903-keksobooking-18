@@ -52,8 +52,11 @@
       typeValue = evt.target.value;
       console.log(typeValue);
       // вот тут он должен рендерить новые пины
-      renderNewPins();
+      renderNewPins(filteredPins);
+      console.log(renderNewPins(filteredPins))
     });
+
+
 
 
 // Универсальная функция фильтрации объявления
@@ -68,10 +71,8 @@
           return elem.offer.type === typeValue;
         });
       }
-      mapPins.appendChild(window.pin.renderPins(filteredPins));
+      return filteredPins;
     };
-
-
 
 
 
