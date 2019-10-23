@@ -47,31 +47,26 @@
     mapPins.appendChild(window.pin.renderPins(response)); // должен выводить только пять, но загружать все
 
     // фильтрация по типу жилья
-    var typeValue = housingTypeFilter.value; // надо сделать универсальнее
-    housingTypeFilter.addEventListener('change', function (evt) {
-      typeValue = evt.target.value;
-      console.log(typeValue);
-      // вот тут он должен рендерить новые пины
-      renderNewPins(filteredPins);
-      console.log(renderNewPins(filteredPins))
-    });
+    housingTypeFilter.addEventListener('change', renderNewPins)
 
 
 
 
 // Универсальная функция фильтрации объявления
-    var filteredPins;
+
     var renderNewPins = function () {
+      var typeValue = housingTypeFilter.value;
+      var filteredPins;
       if (typeValue === 'any') {
-        filteredPins = response.filter(function (elem) {
-          return elem.offer.type !== typeValue;
-        });
+        filteredPins = response;
       } else {
         filteredPins = response.filter(function (elem) {
           return elem.offer.type === typeValue;
         });
       }
-      return filteredPins;
+      // return filteredPins;
+      removePins();
+      mapPins.appendChild(window.pin.renderPins(filteredPins));
     };
 
 
