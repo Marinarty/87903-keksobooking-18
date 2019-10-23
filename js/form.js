@@ -84,7 +84,4 @@
   adTimeOutSelect.addEventListener('change', function () {
     checkTimeInOut(adTimeOutSelect, adTimeInSelect);
   });
-
-  // var event = new Event('change');
-  // adTimeInSelect.dispatchEvent(event);
 })();

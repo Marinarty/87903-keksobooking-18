@@ -17,6 +17,7 @@
     x: mainPin.style.left,
     y: mainPin.style.top
   };
+  var housingTypeFilter = document.getElementById('housing-type');
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -42,9 +43,37 @@
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
-    mapPins.appendChild(window.pin.renderPins(response));
 
-    // вставить куда-то сюда
+    mapPins.appendChild(window.pin.renderPins(response)); // должен выводить только пять, но загружать все
+
+    // фильтрация по типу жилья
+    var typeValue = housingTypeFilter.value; // надо сделать универсальнее
+    housingTypeFilter.addEventListener('change', function (evt) {
+      typeValue = evt.target.value;
+      console.log(typeValue);
+      // вот тут он должен рендерить новые пины
+      renderNewPins();
+    });
+
+
+// Универсальная функция фильтрации объявления
+    var filteredPins;
+    var renderNewPins = function () {
+      if (typeValue === 'any') {
+        filteredPins = response.filter(function (elem) {
+          return elem.offer.type !== typeValue;
+        });
+      } else {
+        filteredPins = response.filter(function (elem) {
+          return elem.offer.type === typeValue;
+        });
+      }
+      mapPins.appendChild(window.pin.renderPins(filteredPins));
+    };
+
+
+
+
 
 
     for (var k = 0; k < formElements.length; k++) {

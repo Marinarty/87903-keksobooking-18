@@ -52,5 +52,4 @@
   window.card = {
     createPopup: createPopup
   };
-
 })();
