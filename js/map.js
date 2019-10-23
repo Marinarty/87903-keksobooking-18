@@ -37,25 +37,21 @@
     addressInput.setAttribute('readonly', 'readonly');
   };
 
-
   // в активное состояние карты
   var toActive = function (response) {
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
-
-    mapPins.appendChild(window.pin.renderPins(response)); // должен выводить только пять, но загружать все
-
+    mapPins.appendChild(window.pin.renderPins(response));
     // фильтрация по типу жилья
-    housingTypeFilter.addEventListener('change', renderNewPins)
+    var typeValue = housingTypeFilter.value;
+    housingTypeFilter.addEventListener('change', function (evt) {
+      typeValue = evt.target.value;
+      renderNewPins();
+    });
 
-
-
-
-// Универсальная функция фильтрации объявления
-
+    // Универсальная функция фильтрации объявления
     var renderNewPins = function () {
-      var typeValue = housingTypeFilter.value;
       var filteredPins;
       if (typeValue === 'any') {
         filteredPins = response;
@@ -64,13 +60,9 @@
           return elem.offer.type === typeValue;
         });
       }
-      // return filteredPins;
       removePins();
       mapPins.appendChild(window.pin.renderPins(filteredPins));
     };
-
-
-
 
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
