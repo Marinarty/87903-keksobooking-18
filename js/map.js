@@ -17,6 +17,7 @@
     x: mainPin.style.left,
     y: mainPin.style.top
   };
+  var housingTypeFilter = document.getElementById('housing-type');
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -36,16 +37,32 @@
     addressInput.setAttribute('readonly', 'readonly');
   };
 
-
   // в активное состояние карты
   var toActive = function (response) {
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
     mapPins.appendChild(window.pin.renderPins(response));
+    // фильтрация по типу жилья
+    var typeValue = housingTypeFilter.value;
+    housingTypeFilter.addEventListener('change', function (evt) {
+      typeValue = evt.target.value;
+      renderNewPins();
+    });
 
-    // вставить куда-то сюда
-
+    // Универсальная функция фильтрации объявления
+    var renderNewPins = function () {
+      var filteredPins;
+      if (typeValue === 'any') {
+        filteredPins = response;
+      } else {
+        filteredPins = response.filter(function (elem) {
+          return elem.offer.type === typeValue;
+        });
+      }
+      removePins();
+      mapPins.appendChild(window.pin.renderPins(filteredPins));
+    };
 
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
