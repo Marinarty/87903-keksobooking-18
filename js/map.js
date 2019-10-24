@@ -12,12 +12,19 @@
   var MAIN_PIN_HEIGHT = 62;
   var MAIN_PIN_POINT_HEIGHT = 22; // высота острого конца метки
   var MAP_Y_MIN = 130; // минимальная кордината метки по Y
-  var MAP_Y_MAX = 630; // максимальгая кордината метки по Y
+  var MAP_Y_MAX = 630; // максимальная кордината метки по Y
   var mainPinDefaultCoords = {
     x: mainPin.style.left,
     y: mainPin.style.top
   };
   var housingTypeFilter = document.getElementById('housing-type');
+  var priceFilter = document.getElementById('housing-price');
+  var roomsFilter = document.getElementById('housing-rooms');
+  var guestsFilter = document.getElementById('housing-guests');
+  var featuresFilter = document.querySelectorAll('.map__features input');
+
+
+
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -43,6 +50,7 @@
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
     mapPins.appendChild(window.pin.renderPins(response));
+
     // фильтрация по типу жилья
     var typeValue = housingTypeFilter.value;
     housingTypeFilter.addEventListener('change', function (evt) {
@@ -50,9 +58,50 @@
       renderNewPins();
     });
 
-    // Универсальная функция фильтрации объявления
+    // фильтрация по стоимости
+    var priceValue = priceFilter.value;
+    priceFilter.addEventListener('change', function (evt) {
+      priceValue = evt.target.value;
+      console.log(priceValue)
+      renderNewPins();
+    });
+
+    // фильтрация по кол-ву комнат
+    var roomsValue = roomsFilter.value;
+    roomsFilter.addEventListener('change', function (evt) {
+      roomsValue = evt.target.value;
+      console.log(roomsValue)
+      renderNewPins();
+    });
+
+    // фильтрация по кол-ву гостей
+    var guestsValue = guestsFilter.value;
+    guestsFilter.addEventListener('change', function (evt) {
+      guestsValue = evt.target.value;
+      console.log(guestsValue)
+      renderNewPins();
+    });
+
+    // фильтрация по удобствам
+    var featureValues = [];
+    featuresFilter.forEach(function (elem) {
+      elem.addEventListener('change', function (evt) {
+        var target = evt.target.value;
+        var featureChecked = evt.target.checked;
+        if (featureChecked) {
+          featureValues.push(target);
+        } else {
+          featureValues.splice(featureValues.indexOf(target), 1);
+        }
+        console.log(featureValues)
+        renderNewPins();
+      });
+    });
+
+    // Функция фильтрации объявления
     var renderNewPins = function () {
       var filteredPins;
+
       if (typeValue === 'any') {
         filteredPins = response;
       } else {
@@ -60,9 +109,51 @@
           return elem.offer.type === typeValue;
         });
       }
+
+      if (priceValue === 'any') {
+        filteredPins = filteredPins;
+      } else {
+        filteredPins = filteredPins.filter(function (elem) {
+          if (priceValue === 'middle') {
+            return elem.offer.price >= 10000 && elem.offer.price < 50000;
+          } else if (priceValue === 'low') {
+            return elem.offer.price >= 0 && elem.offer.price < 10000;
+          }
+          return elem.offer.price >= 50000 && elem.offer.price < 1000000;
+        });
+      }
+
+      if (roomsValue === 'any') {
+        filteredPins = filteredPins;
+      } else {
+        filteredPins = filteredPins.filter(function (elem) {
+          return elem.offer.rooms === parseInt(roomsValue, 10);
+        });
+      }
+
+      if (guestsValue === 'any') {
+        filteredPins = filteredPins;
+      } else {
+        filteredPins = filteredPins.filter(function (elem) {
+          return elem.offer.guests === parseInt(guestsValue, 10);
+        });
+      }
+
+      if (featureValues === []) {
+        filteredPins = filteredPins;
+      } else {
+        filteredPins = filteredPins.filter(function (elem) {
+          return elem.offer.features
+        });
+      }
+
+
       removePins();
       mapPins.appendChild(window.pin.renderPins(filteredPins));
     };
+
+
+
 
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
