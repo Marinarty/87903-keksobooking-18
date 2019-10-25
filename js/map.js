@@ -21,10 +21,7 @@
   var priceFilter = document.getElementById('housing-price');
   var roomsFilter = document.getElementById('housing-rooms');
   var guestsFilter = document.getElementById('housing-guests');
-  var featuresFilter = document.querySelectorAll('.map__features input');
-
-
-
+  var featuresFilter = Array.from(document.querySelectorAll('.map__features input'));
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -62,7 +59,6 @@
     var priceValue = priceFilter.value;
     priceFilter.addEventListener('change', function (evt) {
       priceValue = evt.target.value;
-      console.log(priceValue)
       renderNewPins();
     });
 
@@ -70,7 +66,6 @@
     var roomsValue = roomsFilter.value;
     roomsFilter.addEventListener('change', function (evt) {
       roomsValue = evt.target.value;
-      console.log(roomsValue)
       renderNewPins();
     });
 
@@ -78,28 +73,18 @@
     var guestsValue = guestsFilter.value;
     guestsFilter.addEventListener('change', function (evt) {
       guestsValue = evt.target.value;
-      console.log(guestsValue)
       renderNewPins();
     });
 
     // фильтрация по удобствам
-    var featureValues = [];
     featuresFilter.forEach(function (elem) {
-      elem.addEventListener('change', function (evt) {
-        var target = evt.target.value;
-        var featureChecked = evt.target.checked;
-        if (featureChecked) {
-          featureValues.push(target);
-        } else {
-          featureValues.splice(featureValues.indexOf(target), 1);
-        }
-        console.log(featureValues)
+      elem.addEventListener('change', function () {
         renderNewPins();
       });
     });
 
     // Функция фильтрации объявления
-    var renderNewPins = function () {
+    var getNewPins = function () {
       var filteredPins;
 
       if (typeValue === 'any') {
@@ -139,21 +124,30 @@
         });
       }
 
-      if (featureValues === []) {
-        filteredPins = filteredPins;
-      } else {
+      var featureValues = featuresFilter
+        .filter(function (feature) {
+          return feature.checked;
+        })
+        .map(function (feature) {
+          return feature.value;
+        });
+
+      if (featureValues.length) {
         filteredPins = filteredPins.filter(function (elem) {
-          return elem.offer.features
+          return featureValues.every(function (feature) {
+            return ~elem.offer.features.indexOf(feature);
+          });
         });
       }
-
 
       removePins();
       mapPins.appendChild(window.pin.renderPins(filteredPins));
     };
 
-
-
+    // Устранение дребезга
+    var renderNewPins = window.debounce(function () {
+      getNewPins();
+    });
 
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
