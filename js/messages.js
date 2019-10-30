@@ -3,7 +3,6 @@
 'use strict';
 
 (function () {
-  // отрисовка сообщения об ошибке при провале
   var main = document.querySelector('main');
 
   var errorHundler = function () {
@@ -11,32 +10,17 @@
     var errorTemplate = errorTemplateId.content.querySelector('.error');
     var errorElement = errorTemplate.cloneNode(true);
     main.appendChild(errorElement);
-
-    // document.addEventListener('keydown', closeErrorMessageHundler);
-    // var closeErrorMessageHundler = function (evt) {
-    //   if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-    //     errorElement.remove();
-    //     console.log('error')
-    //   }
-    // };
-    // document.addEventListener('keydown', function (evt) {
-    //   if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-    //     errorElement.remove();
-    //   }
-    // });
-
     errorElement.addEventListener('click', function () {
       errorElement.remove();
     });
-    // document.removeEventListener('keydown', closeErrorMessageHundler);
-  };
 
-  document.addEventListener('keydown', closeErrorMessageHundler);
-  var closeErrorMessageHundler = function (evt) {
-    if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-      errorElement.remove();
-    }
-    document.removeEventListener('keydown', closeErrorMessageHundler);
+    var closeErrorMessageHundler = function (evt) {
+      if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+        errorElement.remove();
+      }
+      document.removeEventListener('keydown', closeErrorMessageHundler);
+    };
+    document.addEventListener('keydown', closeErrorMessageHundler);
   };
 
   var successMessage = function () {
@@ -45,11 +29,20 @@
     var successNotice = successTemplate.cloneNode(true);
     main.appendChild(successNotice);
 
-    document.addEventListener('keydown', function (evt) {
+    // document.addEventListener('keydown', function (evt) {
+    //   if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+    //     successNotice.remove();
+    //   }
+    // });
+
+    var closeSuccessMessageHundler = function (evt) {
       if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
         successNotice.remove();
+        console.log('success');
       }
-    });
+      document.removeEventListener('keydown', closeSuccessMessageHundler);
+    };
+    document.addEventListener('keydown', closeSuccessMessageHundler);
 
     successNotice.addEventListener('click', function () {
       successNotice.remove();
