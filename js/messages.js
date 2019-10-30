@@ -29,16 +29,9 @@
     var successNotice = successTemplate.cloneNode(true);
     main.appendChild(successNotice);
 
-    // document.addEventListener('keydown', function (evt) {
-    //   if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-    //     successNotice.remove();
-    //   }
-    // });
-
     var closeSuccessMessageHundler = function (evt) {
       if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
         successNotice.remove();
-        console.log('success');
       }
       document.removeEventListener('keydown', closeSuccessMessageHundler);
     };
