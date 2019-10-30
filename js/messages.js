@@ -19,17 +19,24 @@
     //     console.log('error')
     //   }
     // };
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-        errorElement.remove();
-      }
-    });
+    // document.addEventListener('keydown', function (evt) {
+    //   if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+    //     errorElement.remove();
+    //   }
+    // });
 
     errorElement.addEventListener('click', function () {
       errorElement.remove();
     });
-
     // document.removeEventListener('keydown', closeErrorMessageHundler);
+  };
+
+  document.addEventListener('keydown', closeErrorMessageHundler);
+  var closeErrorMessageHundler = function (evt) {
+    if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+      errorElement.remove();
+    }
+    document.removeEventListener('keydown', closeErrorMessageHundler);
   };
 
   var successMessage = function () {

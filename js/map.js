@@ -279,7 +279,7 @@
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     if (!counter) {
-      window.load('https://js.dump.academy/keksobooking/data', toActive, window.messages.errorHundler);
+      window.load('https://js.dump.academy/gkeksobooking/data', toActive, window.messages.errorHundler);
       counter++;
     }
 
