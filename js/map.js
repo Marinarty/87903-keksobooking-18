@@ -22,11 +22,19 @@
   var roomsFilter = document.getElementById('housing-rooms');
   var guestsFilter = document.getElementById('housing-guests');
   var featuresFilter = Array.from(document.querySelectorAll('.map__features input'));
+  var popUp = document.querySelector('.popup');
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
     formElements[i].setAttribute('disabled', 'disabled');
   }
+
+  // функция удаления попапа
+  var removePopUp = function () {
+    if (popUp) {
+      popUp.remove();
+    }
+  };
 
   // добавляем в инпут адреса изначальные координаты центра метки при неактивном состоянии страницы
   var fillAddressForInactiveMap = function (element) {
@@ -142,6 +150,12 @@
 
       removePins();
       mapPins.appendChild(window.pin.renderPins(filteredPins));
+
+      // var popUp = document.querySelector('.popup');
+      // if (popUp) {
+      //   popUp.remove();
+      // }
+      removePopUp();
     };
 
     // Устранение дребезга
@@ -173,6 +187,12 @@
         popupClose.addEventListener('click', function () {
           popUp = document.querySelector('.popup');
           popUp.remove();
+        });
+        popupClose.addEventListener('keydown', function (evt) {
+          if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+            popUp = document.querySelector('.popup');
+            popUp.remove();
+          };
         });
       });
     }
@@ -212,6 +232,12 @@
       popUp.remove();
     }
   };
+
+  // возврат в исходное состояние по кнопке сброса
+  var resetPage = document.querySelector('.ad-form__reset');
+  resetPage.addEventListener('click', function () {
+    toInactive();
+  });
 
   // добавляем в инпут адреса координаты острого конца метки при перемещении метки
   var fillAddressForChangingCoords = function (element) {
