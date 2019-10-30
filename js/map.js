@@ -22,7 +22,6 @@
   var roomsFilter = document.getElementById('housing-rooms');
   var guestsFilter = document.getElementById('housing-guests');
   var featuresFilter = Array.from(document.querySelectorAll('.map__features input'));
-  var popUp = document.querySelector('.popup');
 
   // делаем элементы управления формы неактивными
   for (var i = 0; i < formElements.length; i++) {
@@ -31,8 +30,16 @@
 
   // функция удаления попапа
   var removePopUp = function () {
+    var popUp = document.querySelector('.popup');
     if (popUp) {
       popUp.remove();
+    }
+    document.removeEventListener('keydown', closePopUpHundler);
+  };
+
+  var closePopUpHundler = function (evt) {
+    if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+      removePopUp();
     }
   };
 
@@ -49,8 +56,37 @@
     addressInput.setAttribute('readonly', 'readonly');
   };
 
+  var onPinHundler = function (filteredPins) {
+    var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    for (var j = 0; j < mapPin.length; j++) {
+      mapPin[j].addEventListener('click', function (evt) {
+        removePopUp();
+
+        var dataId;
+        if (evt.target.tagName === 'BUTTON') {
+          dataId = evt.target.getAttribute('data-id');
+        } else {
+          dataId = evt.target.parentNode.getAttribute('data-id');
+        }
+
+        document.addEventListener('keydown', closePopUpHundler);
+        document.querySelector('.map').insertBefore(window.card.createPopup(filteredPins[dataId]), document.querySelector('.map__filters-container'));
+
+        var popupClose = document.querySelector('.popup__close');
+        popupClose.addEventListener('click', function () {
+          removePopUp();
+        });
+
+      });
+    }
+  };
+
   // в активное состояние карты
   var toActive = function (response) {
+    response = response.filter(function (elem) {
+      return elem.hasOwnProperty('offer');
+    });
+
     map.classList.remove('map--faded');
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
@@ -150,11 +186,7 @@
 
       removePins();
       mapPins.appendChild(window.pin.renderPins(filteredPins));
-
-      // var popUp = document.querySelector('.popup');
-      // if (popUp) {
-      //   popUp.remove();
-      // }
+      onPinHundler(filteredPins);
       removePopUp();
     };
 
@@ -166,36 +198,7 @@
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
     }
-
-    var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-    for (var j = 0; j < mapPin.length; j++) {
-      mapPin[j].addEventListener('click', function (evt) {
-        var popUp = document.querySelector('.popup');
-        if (popUp) {
-          popUp.remove();
-        }
-        var dataId;
-        if (evt.target.tagName === 'BUTTON') {
-          dataId = evt.target.getAttribute('data-id');
-        } else {
-          dataId = evt.target.parentNode.getAttribute('data-id');
-        }
-
-        document.querySelector('.map').insertBefore(window.card.createPopup(response[dataId]), document.querySelector('.map__filters-container'));
-        var popupClose = document.querySelector('.popup__close');
-        popupClose.addEventListener('click', function () {
-          popUp = document.querySelector('.popup');
-          popUp.remove();
-        });
-        popupClose.addEventListener('keydown', function (evt) {
-          if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-            popUp = document.querySelector('.popup');
-            popUp.remove();
-          };
-        });
-      });
-    }
+    onPinHundler(response);
   };
 
   // в НЕактивное состояние карты

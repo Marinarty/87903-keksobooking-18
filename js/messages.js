@@ -12,8 +12,13 @@
     var errorElement = errorTemplate.cloneNode(true);
     main.appendChild(errorElement);
 
-    // var errorButton = document.querySelector('.error__button');
-
+    // document.addEventListener('keydown', closeErrorMessageHundler);
+    // var closeErrorMessageHundler = function (evt) {
+    //   if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
+    //     errorElement.remove();
+    //     console.log('error')
+    //   }
+    // };
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
         errorElement.remove();
@@ -23,6 +28,8 @@
     errorElement.addEventListener('click', function () {
       errorElement.remove();
     });
+
+    // document.removeEventListener('keydown', closeErrorMessageHundler);
   };
 
   var successMessage = function () {
