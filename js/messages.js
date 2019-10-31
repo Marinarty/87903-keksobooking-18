@@ -1,12 +1,11 @@
 // модуль сообщений об успехе и провале
-
 'use strict';
 
 (function () {
   var main = document.querySelector('main');
 
   var errorHundler = function () {
-    var errorTemplateId = document.querySelector('#error');
+    var errorTemplateId = document.getElementById('error');
     var errorTemplate = errorTemplateId.content.querySelector('.error');
     var errorElement = errorTemplate.cloneNode(true);
     main.appendChild(errorElement);
@@ -24,7 +23,7 @@
   };
 
   var successMessage = function () {
-    var successTemplateId = document.querySelector('#success');
+    var successTemplateId = document.getElementById('success');
     var successTemplate = successTemplateId.content.querySelector('.success');
     var successNotice = successTemplate.cloneNode(true);
     main.appendChild(successNotice);

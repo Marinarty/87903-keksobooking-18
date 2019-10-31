@@ -35,6 +35,7 @@
 
   // создание карточки объявления
   var createPopup = function (popup) {
+
     var popupElement = cardTemplate.cloneNode(true);
     if (popup.offer.title) {
       popupElement.querySelector('.popup__title').textContent = popup.offer.title;

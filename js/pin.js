@@ -5,7 +5,7 @@
   var MAX_PINS = 5;
   // создаю пин
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var createPins = function (ads, id) {
+  var createPin = function (ads, id) {
     var adsElement = pinTemplate.cloneNode(true);
     adsElement.style.left = ads.location.x + 'px';
     adsElement.style.top = ads.location.y + 'px';
@@ -21,7 +21,7 @@
     // вывожу пин
     var pinsNumber = response.length > MAX_PINS ? MAX_PINS : response.length;
     for (var i = 0; i < pinsNumber; i++) {
-      fragment.appendChild(createPins(response[i], i));
+      fragment.appendChild(createPin(response[i], i));
     }
     return fragment;
   };
