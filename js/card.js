@@ -87,6 +87,12 @@
     } else {
       popupElement.querySelector('.popup__avatar').remove();
     }
+
+    var popupClose = popupElement.querySelector('.popup__close');
+    popupClose.addEventListener('click', function () {
+      window.map.removePopUp();
+    });
+
     return popupElement;
   };
 

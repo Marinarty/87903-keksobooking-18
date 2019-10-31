@@ -4,41 +4,31 @@
 (function () {
   var main = document.querySelector('main');
 
-  var errorHundler = function () {
-    var errorTemplateId = document.getElementById('error');
-    var errorTemplate = errorTemplateId.content.querySelector('.error');
-    var errorElement = errorTemplate.cloneNode(true);
-    main.appendChild(errorElement);
-    errorElement.addEventListener('click', function () {
-      errorElement.remove();
+  var createMessage = function (id) {
+    var messageTemplateId = document.getElementById(id);
+    var messageTemplate = messageTemplateId.content.querySelector('.' + id);
+    var messageElement = messageTemplate.cloneNode(true);
+    main.appendChild(messageElement);
+
+    messageElement.addEventListener('click', function () {
+      messageElement.remove();
     });
 
-    var closeErrorMessageHundler = function (evt) {
+    var closeMessageHundler = function (evt) {
       if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-        errorElement.remove();
+        messageElement.remove();
       }
-      document.removeEventListener('keydown', closeErrorMessageHundler);
+      document.removeEventListener('keydown', closeMessageHundler);
     };
-    document.addEventListener('keydown', closeErrorMessageHundler);
+    document.addEventListener('keydown', closeMessageHundler);
+  };
+
+  var errorHundler = function () {
+    createMessage('error');
   };
 
   var successMessage = function () {
-    var successTemplateId = document.getElementById('success');
-    var successTemplate = successTemplateId.content.querySelector('.success');
-    var successNotice = successTemplate.cloneNode(true);
-    main.appendChild(successNotice);
-
-    var closeSuccessMessageHundler = function (evt) {
-      if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
-        successNotice.remove();
-      }
-      document.removeEventListener('keydown', closeSuccessMessageHundler);
-    };
-    document.addEventListener('keydown', closeSuccessMessageHundler);
-
-    successNotice.addEventListener('click', function () {
-      successNotice.remove();
-    });
+    createMessage('success');
   };
 
   window.messages = {

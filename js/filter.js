@@ -8,10 +8,13 @@
   var roomsFilter = document.getElementById('housing-rooms');
   var guestsFilter = document.getElementById('housing-guests');
   var featuresFilter = Array.from(document.querySelectorAll('.map__features input'));
-  var MIN_PRICE = 0;
-  var MAX_PRICE = 1000000;
-  var MIDDLE_MIN_PRICE = 10000;
-  var MIDDLE_MAX_PRICE = 50000;
+  var mapPins = document.querySelector('.map__pins');
+  var Price = {
+    MIN: 0,
+    MAX: 1000000,
+    MIDDLE_MIN: 10000,
+    MIDDLE_MAX: 50000
+  };
 
   // фильтрация по типу жилья
   var typeValue = housingTypeFilter.value;
@@ -49,41 +52,33 @@
   });
 
   // Функция фильтрации объявления
-  var getNewPins = function (response) {
-    var filteredPins;
+  var getNewPins = function () {
+    var filteredPins = window.map.response;
 
-    if (typeValue === 'any') {
-      filteredPins = response;
-    } else {
-      filteredPins = response.filter(function (elem) {
+    if (typeValue !== 'any') {
+      filteredPins = filteredPins.filter(function (elem) {
         return elem.offer.type === typeValue;
       });
     }
 
-    if (priceValue === 'any') {
-      filteredPins = filteredPins;
-    } else {
+    if (priceValue !== 'any') {
       filteredPins = filteredPins.filter(function (elem) {
         if (priceValue === 'middle') {
-          return elem.offer.price >= MIDDLE_MIN_PRICE && elem.offer.price < MIDDLE_MAX_PRICE;
+          return elem.offer.price >= Price.MIDDLE_MIN && elem.offer.price < Price.MIDDLE_MAX;
         } else if (priceValue === 'low') {
-          return elem.offer.price >= MIN_PRICE && elem.offer.price < MIDDLE_MIN_PRICE;
+          return elem.offer.price >= Price.MIN && elem.offer.price < Price.MIDDLE_MIN;
         }
-        return elem.offer.price >= MIDDLE_MAX_PRICE && elem.offer.price < MAX_PRICE;
+        return elem.offer.price >= Price.MIDDLE_MAX && elem.offer.price < Price.MAX;
       });
     }
 
-    if (roomsValue === 'any') {
-      filteredPins = filteredPins;
-    } else {
+    if (roomsValue !== 'any') {
       filteredPins = filteredPins.filter(function (elem) {
         return elem.offer.rooms === parseInt(roomsValue, 10);
       });
     }
 
-    if (guestsValue === 'any') {
-      filteredPins = filteredPins;
-    } else {
+    if (guestsValue !== 'any') {
       filteredPins = filteredPins.filter(function (elem) {
         return elem.offer.guests === parseInt(guestsValue, 10);
       });
@@ -105,10 +100,10 @@
       });
     }
 
-    removePins();
+    window.map.removePins();
     mapPins.appendChild(window.pin.renderPins(filteredPins));
-    onPinHundler(filteredPins);
-    removePopUp();
+    window.map.onPinHundler(filteredPins);
+    window.map.removePopUp();
   };
 
   // Устранение дребезга
