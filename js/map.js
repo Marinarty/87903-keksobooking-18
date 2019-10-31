@@ -22,7 +22,7 @@
   var toDisabled = function () {
     for (var i = 0; i < formElements.length; i++) {
       formElements[i].setAttribute('disabled', 'disabled');
-    };
+    }
   };
 
   // делаем элементы управления формы неактивными
