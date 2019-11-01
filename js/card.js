@@ -3,17 +3,23 @@
 
 (function () {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-
-  var getRoomsType = function (type) {
-    if (type === 'flat') {
-      return 'Квартира';
-    } else if (type === 'bungalo') {
-      return 'Бунгало';
-    } else if (type === 'house') {
-      return 'Дом';
-    }
-    return 'Дворец';
+  var OfferType = {
+    BUNGALO: 'Бунгало',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец'
   };
+
+  // var getRoomsType = function (type) {
+  //   if (type === 'flat') {
+  //     return 'Квартира';
+  //   } else if (type === 'bungalo') {
+  //     return 'Бунгало';
+  //   } else if (type === 'house') {
+  //     return 'Дом';
+  //   }
+  //   return 'Дворец';
+  // };
 
   var createFeatures = function (fts) {
     var featureElement = '';
@@ -53,7 +59,7 @@
       popupElement.querySelector('.popup__text--price').remove();
     }
     if (popup.offer.type) {
-      popupElement.querySelector('.popup__type').textContent = getRoomsType(popup.offer.type);
+      popupElement.querySelector('.popup__type').textContent = OfferType[popup.offer.type.toUpperCase()];
     } else {
       popupElement.querySelector('.popup__type').remove();
     }

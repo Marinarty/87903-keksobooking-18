@@ -7,7 +7,8 @@
   var mainPin = document.querySelector('.map__pin--main');
   var mainForm = document.querySelector('.ad-form');
   var mapPins = document.querySelector('.map__pins');
-  var addressInput = document.getElementById('address');
+  var addressInput = document.querySelector('#address');
+  var resetPage = document.querySelector('.ad-form__reset');
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 62;
   var MAIN_PIN_POINT_HEIGHT = 22; // высота острого конца метки
@@ -17,6 +18,7 @@
     x: mainPin.style.left,
     y: mainPin.style.top
   };
+  var counter = 0;
 
   // функция деактивации элемента
   var toDisabled = function () {
@@ -33,10 +35,10 @@
     if (popUp) {
       popUp.remove();
     }
-    document.removeEventListener('keydown', closePopUpHundler);
+    document.removeEventListener('keydown', popUpCloseHandler);
   };
 
-  var closePopUpHundler = function (evt) {
+  var popUpCloseHandler = function (evt) {
     if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
       removePopUp();
     }
@@ -55,13 +57,13 @@
     addressInput.setAttribute('readonly', 'readonly');
   };
 
-  var onPinHundler = function (filteredPins) {
+  var pinClickHandler = function (filteredPins) {
     var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     for (var j = 0; j < mapPin.length; j++) {
       mapPin[j].addEventListener('click', function (evt) {
         removePopUp();
         var dataId = evt.currentTarget.getAttribute('data-id');
-        document.addEventListener('keydown', closePopUpHundler);
+        document.addEventListener('keydown', popUpCloseHandler);
         map.insertBefore(window.card.createPopup(filteredPins[dataId]), document.querySelector('.map__filters-container'));
       });
     }
@@ -82,7 +84,7 @@
     for (var k = 0; k < formElements.length; k++) {
       formElements[k].removeAttribute('disabled', 'disabled');
     }
-    onPinHundler(response);
+    pinClickHandler(response);
   };
 
   // в НЕактивное состояние карты
@@ -97,7 +99,7 @@
   };
 
   mainForm.addEventListener('submit', function (evt) {
-    window.upload(new FormData(mainForm), successHandler, window.messages.errorHundler);
+    window.upload(new FormData(mainForm), getSuccess, window.messages.errorMessage);
     evt.preventDefault();
   });
 
@@ -108,7 +110,7 @@
     }
   };
 
-  var successHandler = function () {
+  var getSuccess = function () {
     window.messages.successMessage();
     mainForm.reset();
     toInactive();
@@ -117,7 +119,6 @@
   };
 
   // возврат в исходное состояние по кнопке сброса
-  var resetPage = document.querySelector('.ad-form__reset');
   resetPage.addEventListener('click', function () {
     toInactive();
   });
@@ -155,11 +156,10 @@
   };
 
   // добавляем обработчик события mousedown на элемент .map__pin--main, переводящий страницу из неактивного состояния в активное и следит за перемещением главного пина
-  var counter = 0;
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     if (!counter) {
-      window.load(toActive, window.messages.errorHundler);
+      window.load(toActive, window.messages.errorMessage);
       counter++;
     }
 
@@ -221,6 +221,6 @@
     toActive: toActive,
     removePopUp: removePopUp,
     removePins: removePins,
-    onPinHundler: onPinHundler,
+    pinClickHandler: pinClickHandler,
   };
 })();

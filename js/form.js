@@ -2,13 +2,13 @@
 'use strict';
 
 (function () {
-  var inputRooms = document.getElementById('room_number');
-  var inputCapacity = document.getElementById('capacity');
-  var adTitleInput = document.getElementById('title');
-  var adPriceInput = document.getElementById('price');
-  var adTypeSelect = document.getElementById('type');
-  var adTimeInSelect = document.getElementById('timein');
-  var adTimeOutSelect = document.getElementById('timeout');
+  var inputRooms = document.querySelector('#room_number');
+  var inputCapacity = document.querySelector('#capacity');
+  var adTitleInput = document.querySelector('#title');
+  var adPriceInput = document.querySelector('#price');
+  var adTypeSelect = document.querySelector('#type');
+  var adTimeInSelect = document.querySelector('#timein');
+  var adTimeOutSelect = document.querySelector('#timeout');
 
   // сверка гостей и комнат
   var roomsGuests = {
@@ -18,20 +18,26 @@
     100: [0]
   };
 
+  var TypePrice = {
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000
+  };
+
   inputRooms.addEventListener('change', function () {
     var currentValue = inputRooms.value;
-    var massive = roomsGuests[currentValue];
+    var roomsGuestsRatio = roomsGuests[currentValue];
 
-    for (var i = 0; i < inputCapacity.options.length; i++) {
-      var option = inputCapacity.options[i];
+    inputCapacity.options.forEach(function (option) {
       option.disabled = true;
 
-      for (var j = 0; j < massive.length; j++) {
-        if (massive[j] === Number(option.value)) {
+      for (var j = 0; j < roomsGuestsRatio.length; j++) {
+        if (roomsGuestsRatio[j] === Number(option.value)) {
           option.disabled = false;
         }
       }
-    }
+    });
   });
 
   // валидация формы
@@ -63,16 +69,9 @@
     timeSecond.value = timeFirst.value;
   };
 
-  var typePrice = {
-    'bungalo': 0,
-    'flat': 1000,
-    'house': 5000,
-    'palace': 10000
-  };
-
   adTypeSelect.addEventListener('change', function () {
     var currentValue = adTypeSelect.value;
-    var currentPrice = typePrice[currentValue];
+    var currentPrice = TypePrice[currentValue.toUpperCase()];
     adPriceInput.min = currentPrice;
     adPriceInput.placeholder = currentPrice;
   });

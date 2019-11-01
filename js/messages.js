@@ -5,7 +5,7 @@
   var main = document.querySelector('main');
 
   var createMessage = function (id) {
-    var messageTemplateId = document.getElementById(id);
+    var messageTemplateId = document.querySelector('#' + id);
     var messageTemplate = messageTemplateId.content.querySelector('.' + id);
     var messageElement = messageTemplate.cloneNode(true);
     main.appendChild(messageElement);
@@ -14,16 +14,16 @@
       messageElement.remove();
     });
 
-    var closeMessageHundler = function (evt) {
+    var messageCloseHandler = function (evt) {
       if (evt.keyCode === window.utils.ESCAPE_KEYCODE) {
         messageElement.remove();
+        document.removeEventListener('keydown', messageCloseHandler);
       }
-      document.removeEventListener('keydown', closeMessageHundler);
     };
-    document.addEventListener('keydown', closeMessageHundler);
+    document.addEventListener('keydown', messageCloseHandler);
   };
 
-  var errorHundler = function () {
+  var errorMessage = function () {
     createMessage('error');
   };
 
@@ -32,7 +32,7 @@
   };
 
   window.messages = {
-    errorHundler: errorHundler,
+    errorMessage: errorMessage,
     successMessage: successMessage
   };
 })();

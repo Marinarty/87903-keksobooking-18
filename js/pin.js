@@ -3,14 +3,16 @@
 
 (function () {
   var MAX_PINS = 5;
-  // создаю пин
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+  // создаю пин
   var createPin = function (ads, id) {
     var adsElement = pinTemplate.cloneNode(true);
+    var adsElementImg = adsElement.querySelector('img');
     adsElement.style.left = ads.location.x + 'px';
     adsElement.style.top = ads.location.y + 'px';
-    adsElement.querySelector('img').src = ads.author.avatar;
-    adsElement.querySelector('img').alt = ads.offer.title;
+    adsElementImg.src = ads.author.avatar;
+    adsElementImg.alt = ads.offer.title;
     adsElement.setAttribute('data-id', id);
     return adsElement;
   };
