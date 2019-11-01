@@ -27,17 +27,18 @@
 
   inputRooms.addEventListener('change', function () {
     var currentValue = inputRooms.value;
-    var roomsGuestsRatio = roomsGuests[currentValue];
+    var roomsGuestsValue = roomsGuests[currentValue];
 
-    inputCapacity.options.forEach(function (option) {
+    for (var i = 0; i < inputCapacity.options.length; i++) {
+      var option = inputCapacity.options[i];
       option.disabled = true;
 
-      for (var j = 0; j < roomsGuestsRatio.length; j++) {
-        if (roomsGuestsRatio[j] === Number(option.value)) {
+      for (var j = 0; j < roomsGuestsValue.length; j++) {
+        if (roomsGuestsValue[j] === Number(option.value)) {
           option.disabled = false;
         }
       }
-    });
+    }
   });
 
   // валидация формы

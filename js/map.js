@@ -20,14 +20,13 @@
   };
   var counter = 0;
 
-  // функция деактивации элемента
-  var toDisabled = function () {
-    for (var i = 0; i < formElements.length; i++) {
-      formElements[i].setAttribute('disabled', 'disabled');
-    }
+  var toDisabled = function (arr) {
+    arr.forEach(function (element) {
+      element.setAttribute('disabled', 'disabled');
+    });
   };
 
-  toDisabled();
+  toDisabled(formElements);
 
   // функция удаления попапа
   var removePopUp = function () {
@@ -59,14 +58,14 @@
 
   var pinClickHandler = function (filteredPins) {
     var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    for (var j = 0; j < mapPin.length; j++) {
-      mapPin[j].addEventListener('click', function (evt) {
+    mapPin.forEach(function (element) {
+      element.addEventListener('click', function (evt) {
         removePopUp();
         var dataId = evt.currentTarget.getAttribute('data-id');
         document.addEventListener('keydown', popUpCloseHandler);
         map.insertBefore(window.card.createPopup(filteredPins[dataId]), document.querySelector('.map__filters-container'));
       });
-    }
+    });
   };
 
   // в активное состояние карты
@@ -81,9 +80,9 @@
     mainForm.classList.remove('ad-form--disabled');
     fillAddressForActiveMap(mainPin);
     mapPins.appendChild(window.pin.renderPins(response));
-    for (var k = 0; k < formElements.length; k++) {
-      formElements[k].removeAttribute('disabled', 'disabled');
-    }
+    formElements.forEach(function (element) {
+      element.removeAttribute('disabled', 'disabled');
+    });
     pinClickHandler(response);
   };
 
@@ -95,7 +94,7 @@
     mainPin.style.top = mainPinDefaultCoords.y;
     fillAddressForInactiveMap(mainPin);
     mainForm.classList.add('ad-form--disabled');
-    toDisabled();
+    toDisabled(formElements);
   };
 
   mainForm.addEventListener('submit', function (evt) {
@@ -105,9 +104,9 @@
 
   var removePins = function () {
     var mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    for (var l = 0; l < mapPin.length; l++) {
-      mapPin[l].remove();
-    }
+    mapPin.forEach(function (element) {
+      element.remove();
+    });
   };
 
   var getSuccess = function () {
@@ -173,7 +172,7 @@
       y: evt.clientY
     };
 
-    var onMouseMove = function (moveEvt) {
+    var mouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
 
       var shift = {
@@ -196,18 +195,18 @@
 
     };
 
-    var onMouseUp = function (upEvt) {
+    var mouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
 
       fillAddressForChangingCoords(mainPin);
 
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
 
   });
 

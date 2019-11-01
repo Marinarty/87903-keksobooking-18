@@ -10,17 +10,6 @@
     PALACE: 'Дворец'
   };
 
-  // var getRoomsType = function (type) {
-  //   if (type === 'flat') {
-  //     return 'Квартира';
-  //   } else if (type === 'bungalo') {
-  //     return 'Бунгало';
-  //   } else if (type === 'house') {
-  //     return 'Дом';
-  //   }
-  //   return 'Дворец';
-  // };
-
   var createFeatures = function (fts) {
     var featureElement = '';
 
