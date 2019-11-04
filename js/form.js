@@ -25,6 +25,19 @@
     PALACE: 10000
   };
 
+  var checkRoomsValidity = function () {
+    var currentValue = inputRooms.value;
+    var roomsGuestsValue = roomsGuests[currentValue];
+
+    if (roomsGuestsValue.includes(parseInt(inputCapacity.value, 10))) {
+      inputCapacity.setCustomValidity('');
+    } else {
+      inputCapacity.setCustomValidity('Для количества комнат"' + currentValue + '" указанное количество мест недоступно');
+    }
+  };
+
+  inputCapacity.addEventListener('change', checkRoomsValidity);
+
   inputRooms.addEventListener('change', function () {
     var currentValue = inputRooms.value;
     var roomsGuestsValue = roomsGuests[currentValue];
@@ -39,6 +52,8 @@
         }
       }
     }
+
+    checkRoomsValidity();
   });
 
   // валидация формы

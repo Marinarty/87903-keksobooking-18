@@ -61,6 +61,14 @@
 
   // Функция фильтрации объявления
   var getNewPins = function () {
+
+    var featureValues = featuresFilter.reduce(function (arr, data) {
+      if (data.checked) {
+        arr.push(data.value);
+      }
+      return arr;
+    }, []);
+
     var filteredPins = window.map.response.filter(function (elem) {
       if (typeValue !== 'any' && elem.offer.type !== typeValue) {
         return false;
@@ -78,17 +86,9 @@
         return false;
       }
 
-      var featureValues = featuresFilter
-      .filter(function (feature) {
-        return feature.checked;
-      })
-      .map(function (feature) {
-        return feature.value;
-      });
-
       if (featureValues.length) {
         return featureValues.every(function (feature) {
-          return ~elem.offer.features.indexOf(feature);
+          return elem.offer.features.includes(feature);
         });
       }
       return true;
